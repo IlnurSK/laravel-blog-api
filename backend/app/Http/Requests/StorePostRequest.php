@@ -28,6 +28,7 @@ class StorePostRequest extends FormRequest
             'tag_ids' => 'array',
             'tag_ids.*' => 'exists:tags,id',
             'is_published' => 'boolean',
+
         ];
     }
 }

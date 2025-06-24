@@ -28,6 +28,7 @@ class UpdatePostRequest extends FormRequest
             'tag_ids' => 'sometimes|array',
             'tag_ids.*' => 'exists:tags,id',
             'is_published' => 'sometimes|boolean',
+
         ];
     }
 }
