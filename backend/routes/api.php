@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -29,3 +30,7 @@ Route::post('/posts', [PostController::class, 'store'])->middleware('auth:sanctu
 Route::put('/posts/{post}', [PostController::class, 'update'])->middleware('auth:sanctum');
 // Маршрут удаления Поста, авторизованного пользователя
 Route::delete('/posts/{post}', [PostController::class, 'destroy'])->middleware('auth:sanctum');
+
+
+// Ресурсный маршрут для Категорий
+Route::apiResource('/categories', CategoryController::class);
