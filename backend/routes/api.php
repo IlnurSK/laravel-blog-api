@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\TagController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -34,3 +35,6 @@ Route::delete('/posts/{post}', [PostController::class, 'destroy'])->middleware('
 
 // Ресурсный маршрут для Категорий
 Route::apiResource('/categories', CategoryController::class);
+
+// Ресурсный маршрут для Тегов
+Route::apiResource('/tags', TagController::class);
