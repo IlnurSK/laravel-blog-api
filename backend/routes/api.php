@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\TagController;
 use Illuminate\Http\Request;
@@ -38,3 +39,18 @@ Route::apiResource('/categories', CategoryController::class);
 
 // Ресурсный маршрут для Тегов
 Route::apiResource('/tags', TagController::class);
+
+// Маршрут получения всех Комментариев
+Route::get('/comments', [CommentController::class, 'index']);
+// Маршрут получения конкретного Коммента
+Route::get('/comments/{comment}', [CommentController::class, 'show']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    // Маршрут создания нового Коммента, авторизованного пользователя
+    Route::post('/comments', [CommentController::class, 'store']);
+    // Маршрут обновления Коммента, авторизованного пользователя
+    Route::put('/comments/{comment}', [CommentController::class, 'update']);
+    // Маршрут удаления Коммента, авторизованного пользователя
+    Route::delete('/comments/{comment}', [CommentController::class, 'destroy']);
+});
+
