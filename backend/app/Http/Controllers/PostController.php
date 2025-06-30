@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
 
@@ -14,10 +15,18 @@ class PostController extends Controller
      */
 
     // Метод получения всех Постов
-    public function index()
+    public function index(Request $request)
     {
-        // Возвращаем все Посты со связанными данными, в виде постраничного списка
-        return Post::with(['user', 'category', 'tags'])->paginate(10);
+        // Возвращаем все Посты со связанными данными, в виде постраничного списка. Если указаны Категории, фильтруем информацию.
+        $query = Post::with(['user', 'category', 'tags']);
+
+        if ($request->has('category_id')) {
+            $query->where('category_id', $request->input('category_id'));
+        }
+
+        $posts = $query->orderBy('created_at', 'desc')->paginate(10);
+
+        return PostResource::collection($posts);
     }
 
     /**

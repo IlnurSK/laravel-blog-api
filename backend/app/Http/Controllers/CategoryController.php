@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
+use App\Http\Resources\PostResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -67,5 +68,13 @@ class CategoryController extends Controller
         $category->delete();
 
         return response()->json(['message' => 'Category deleted']);
+    }
+
+    // Метод вывода всех Постов связанных с Категорией
+    public function posts($id)
+    {
+        $category = Category::with('posts.user', 'posts.tags')->findOrFail($id);
+
+        return PostResource::collection($category->posts()->latest()->paginate(10));
     }
 }

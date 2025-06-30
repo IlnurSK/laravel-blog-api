@@ -36,6 +36,8 @@ Route::delete('/posts/{post}', [PostController::class, 'destroy'])->middleware('
 
 // Ресурсный маршрут для Категорий
 Route::apiResource('/categories', CategoryController::class);
+// Маршрут получения Постов по Категориям
+Route::get('/categories/{id}/posts', [CategoryController::class, 'posts']);
 
 // Ресурсный маршрут для Тегов
 Route::apiResource('/tags', TagController::class);
