@@ -7,6 +7,7 @@ use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -17,11 +18,19 @@ class PostController extends Controller
     // Метод получения всех Постов
     public function index(Request $request)
     {
-        // Возвращаем все Посты со связанными данными, в виде постраничного списка. Если указаны Категории, фильтруем информацию.
+        // Получаем все Посты со связанными данными
         $query = Post::with(['user', 'category', 'tags']);
 
+        // Если указаны Категории, фильтруем Посты
         if ($request->has('category_id')) {
             $query->where('category_id', $request->input('category_id'));
+        }
+
+        // Если указаны Теги, фильтруем Посты
+        if ($request->has('tag_id')) {
+            $query->whereHas('tags', function ($q) use ($request) {
+                $q->where('tags.id', $request->input('tag_id'));
+            });
         }
 
         $posts = $query->orderBy('created_at', 'desc')->paginate(10);
@@ -36,16 +45,21 @@ class PostController extends Controller
     // Метод сохранения нового Поста
     public function store(StorePostRequest $request)
     {
-        // Создание нового поста (валидированного) от имени текущего аутентифицированного пользователя
-        $post = $request->user()->posts()->create($request->validated());
+        // Получаем валидированную информацию
+        $data = $request->validated();
+
+        // Создаем пост с авторизованны юзером
+        $post = Auth::user()->posts()->create($data);
 
         // Если в запросе есть Теги, привязываем их к Посту
-        if ($request->has('tag_ids')) {
-            $post->tags()->sync($request->tag_ids);
+        if (isset($data['tag_ids'])) {
+            $post->tags()->attach($data['tag_ids']);
         }
+        // Предзагружаем связанные данные
+        $post->load(['user', 'category', 'tags']);
 
-        // Возвращаем новый Пост с тегами и статусом 201 Created
-        return response()->json($post->load('tags'), 201);
+        // Возвращаем новый Пост в виде ресурса
+        return new PostResource($post);
     }
 
     /**
@@ -56,7 +70,8 @@ class PostController extends Controller
     public function show(Post $post)
     {
         // Возвращаем конкретный Пост со связанными данными
-        return $post->load(['user', 'category', 'tags', 'comments']);
+        $post->load(['user', 'category', 'tags', 'comments']);
+        return new PostResource($post);
     }
 
     /**
@@ -67,20 +82,22 @@ class PostController extends Controller
     public function update(UpdatePostRequest $request, Post $post)
     {
         // Проверяем что Пост принадлежит текущему пользователю
-        if ($request->user()->id !== $post->user_id) {
-            return response()->json(['message' => 'Forbidden'], 403);
-        }
+        $this->authorize('update', $post);
 
         // Обновляем Пост
-        $post->update($request->validated());
+        $data = $request->validated();
+        $post->update($data);
 
         // Если в запросе есть Теги, привязываем их к Посту
-        if ($request->has('tag_ids')) {
-            $post->tags()->sync($request->tag_ids);
+        if (isset($data['tag_ids'])) {
+            $post->tags()->sync($data['tag_ids']);
         }
 
-        // Возвращаем обновленный Пост с тегами
-        return response()->json($post->load('tags'));
+        // Предзагружаем обновленный Пост с тегами
+        $post->load(['user', 'category', 'tags']);
+
+        // Возвращаем обновленный Пост в виде ресурса
+        return new PostResource($post);
     }
 
     /**
@@ -88,17 +105,16 @@ class PostController extends Controller
      */
 
     // Метод удаления Поста
-    public function destroy(Request $request, Post $post)
+    public function destroy(Post $post)
     {
         // Проверяем что Пост принадлежит текущему пользователю
-        if ($request->user()->id !== $post->user_id) {
-            return response()->json(['message' => 'Forbidden'], 403);
-        }
+        $this->authorize('delete', $post);
 
-        // Удаляем Пост
+        // Удаляем связанные теги и удаляем Пост
+        $post->tags()->detach();
         $post->delete();
 
         // Возвращаем сообщение об успехе
-        return response()->json(['message' => 'Post deleted.']);
+        return response()->json(['message' => 'Post deleted']);
     }
 }
