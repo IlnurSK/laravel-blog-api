@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
+use App\Http\Resources\CategoryResource;
 use App\Http\Resources\PostResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
@@ -17,7 +19,7 @@ class CategoryController extends Controller
     // Метод получения всех Категорий
     public function index()
     {
-        return Category::all();
+        return CategoryResource::collection(Category::all());
     }
 
     /**
@@ -27,11 +29,16 @@ class CategoryController extends Controller
     // Метод сохранения новой Категории
     public function store(StoreCategoryRequest $request)
     {
+        // Проверяем является ли юзер админом
+        if (!Auth::user()->is_admin) {
+            return response()->json(['message' => 'Forbidden'], 403);
+        }
+
         // Создаем экземпляр новой Категории
         $category = Category::create($request->validated());
 
-        // Возвращаем экземпляр в JSON со статусом 201
-        return response()->json($category, 201);
+        // Возвращаем ресурсный класс
+        return new CategoryResource($category);
     }
 
     /**
@@ -41,7 +48,7 @@ class CategoryController extends Controller
     // Метод получения конкретной категории
     public function show(Category $category)
     {
-        return $category;
+        return new CategoryResource($category);
     }
 
     /**
@@ -51,11 +58,16 @@ class CategoryController extends Controller
     // Метод получения обновленной Категории
     public function update(UpdateCategoryRequest $request, Category $category)
     {
+        // Проверяем является ли Юзер админом
+        if (!Auth::user()->is_admin) {
+            return response()->json(['message' => 'Forbidden'], 403);
+        }
+
         // Обновляем валидированные данные в текущей Категории
         $category->update($request->validated());
 
-        // Возвращаем обновленный экземпляр в JSON
-        return response()->json($category);
+        // Возвращаем обновленную категорию в виде ресурса
+        return new CategoryResource($category);
     }
 
     /**
@@ -65,16 +77,22 @@ class CategoryController extends Controller
     // Метод удаления Категории, возвращает сообщение об успехе
     public function destroy(Category $category)
     {
+        // Проверяем является ли Юзер Админом
+        if (!Auth::user()->is_admin) {
+            return response()->json(['message' => 'Forbidden'], 403);
+        }
+
+        // Удаляем категорию
         $category->delete();
 
         return response()->json(['message' => 'Category deleted']);
     }
 
     // Метод вывода всех Постов связанных с Категорией
-    public function posts($id)
+    public function posts(Category $category)
     {
-        $category = Category::with('posts.user', 'posts.tags')->findOrFail($id);
+        $posts = $category->posts()->with(['user', 'tags'])->latest()->paginate(10);
 
-        return PostResource::collection($category->posts()->latest()->paginate(10));
+        return PostResource::collection($posts);
     }
 }
