@@ -31,4 +31,23 @@ class UpdateTagRequest extends FormRequest
             ],
         ];
     }
+
+    public function bodyParameters(): array
+    {
+        return [
+            'name' => [
+                'description' => 'Новое название тега',
+                'example' => 'Laravel 11',
+                'required' => true,
+                'type' => 'string',
+                'rules' => [
+                    'required',
+                    'string',
+                    'max:100',
+                    Rule::unique('tags', 'name')->ignore($this->tag->id ?? null)
+                ],
+                'notes' => 'Название должно быть уникальным (игнорируя текущий тег)'
+            ]
+        ];
+    }
 }

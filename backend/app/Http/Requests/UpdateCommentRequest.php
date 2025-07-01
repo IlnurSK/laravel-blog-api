@@ -25,4 +25,18 @@ class UpdateCommentRequest extends FormRequest
             'body' => 'required|string|max:1000',
         ];
     }
+
+    public function bodyParameters(): array
+    {
+        return [
+            'body' => [
+                'description' => 'Обновленный текст комментария',
+                'example' => 'Обновленный комментарий с дополнительной информацией',
+                'required' => true,
+                'type' => 'string',
+                'rules' => 'required|string|max:1000',
+                'notes' => 'Максимальная длина - 1000 символов'
+            ]
+        ];
+    }
 }

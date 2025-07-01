@@ -30,4 +30,52 @@ class UpdatePostRequest extends FormRequest
             'is_published' => 'sometimes|boolean',
         ];
     }
+
+    public function bodyParameters(): array
+    {
+        return [
+            'title' => [
+                'description' => 'Заголовок поста',
+                'example' => 'Новости Laravel 11',
+                'required' => false, // sometimes|required
+                'type' => 'string',
+                'rules' => 'string|max:255',
+                'notes' => 'Обязателен при обновлении, если передан'
+            ],
+            'body' => [
+                'description' => 'Содержимое поста',
+                'example' => 'Laravel 11 представляет новые функции...',
+                'required' => false, // sometimes|required
+                'type' => 'string',
+                'notes' => 'Обязателен при создании, если передан'
+            ],
+            'category_id' => [
+                'description' => 'ID связанной категории',
+                'example' => 1,
+                'required' => false, // nullable
+                'type' => 'integer',
+                'rules' => 'exists:categories,id'
+            ],
+            'tag_ids' => [
+                'description' => 'Массив ID тегов для обновления связей',
+                'example' => [1, 3],
+                'required' => false,
+                'type' => 'array',
+                'rules' => 'sometimes|array|exists:tags,id'
+            ],
+            'tag_ids.*' => [
+                'description' => 'ID конкретного тега',
+                'example' => 1,
+                'type' => 'integer',
+                'rules' => 'exists:tags,id'
+            ],
+            'is_published' => [
+                'description' => 'Флаг публикации',
+                'example' => true,
+                'required' => false, // sometimes
+                'type' => 'boolean',
+                'notes' => 'Если не передано, сохраняется текущее значение'
+            ]
+        ];
+    }
 }

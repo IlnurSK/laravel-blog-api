@@ -27,8 +27,27 @@ class UpdateCategoryRequest extends FormRequest
                 'required',
                 'string',
                 'max:100',
-                Rule::unique('categories', 'name')->ignore($this->category->id),
+                Rule::unique('categories', 'name')->ignore($this->route('category') ?? $this->category->id ?? null),
                 ],
+        ];
+    }
+
+    public function bodyParameters(): array
+    {
+        return [
+            'name' => [
+                'description' => 'Новое название категории',
+                'example' => 'Обновлённое название',
+                'required' => true,
+                'type' => 'string',
+                'rules' => [
+                    'required',
+                    'string',
+                    'max:100',
+                    'unique:categories,name,' . ($this->category->id ?? 'NULL'),
+                ],
+                'notes' => 'Название должно быть уникальным (игнорируя текущую категорию)'
+            ]
         ];
     }
 }

@@ -25,4 +25,18 @@ class StoreCategoryRequest extends FormRequest
             'name' => 'required|string|max:100|unique:categories,name',
         ];
     }
+
+    public function bodyParameters(): array
+    {
+        return [
+            'name' => [
+                'description' => 'Название категории',
+                'example' => 'Новости технологий',
+                'required' => true,
+                'type' => 'string',
+                'rules' => 'string|max:100|unique:categories,name',
+                'notes' => 'Должно быть уникальным (не повторять существующие названия категорий)'
+            ]
+        ];
+    }
 }
