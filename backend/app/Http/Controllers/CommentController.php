@@ -4,70 +4,89 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
+use App\Http\Resources\CommentResource;
 use App\Models\Comment;
+use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    // Метод получения всех Комментов
-    public function index()
+    // Метод получения всех Комментов Поста
+    public function index(Post $post)
     {
         // Возвращаем все Комменты со связанными данными, в виде постраничного списка
-        return Comment::with(['user', 'post'])->paginate(10);
+        $comments = $post->comments()->with(['user'])->latest()->paginate(10);
+
+        return CommentResource::collection($comments);
     }
 
     /**
      * Store a newly created resource in storage.
      */
     // Метод сохранения нового Коммента
-    public function store(StoreCommentRequest $request)
+    public function store(StoreCommentRequest $request, Post $post)
     {
-        // Создание нового Коммента (валидированного) от имени текущего аутентифицированного пользователя
-        $comment = $request->user()->comments()->create($request->validated());
+        // Создание нового Коммента (валидированного) к Посту, с привязкой ID юзера
+        $comment = $post->comments()->create([
+            'body'    => $request->validated('body'),
+            'user_id' => Auth::id(),
+        ]);
 
-        // Возвращаем новый Коммент с данными по пользователю (для фронта) и статусом 201 Created
-        return response()->json($comment->load(['user']), 201);
+        // Предзагружаем связанные данные по Юзеру
+        $comment->load('user');
+
+        // Возвращаем новый Коммент в виде ресурса
+        return new CommentResource($comment);
     }
 
     /**
      * Display the specified resource.
      */
     // Метод получения конкретного Коммента
-    public function show(Comment $comment)
+    public function show(Comment $comment, Post $post)
     {
+        // Проверяем существование коммента
+        if ($comment->post_id !== $post->id) {
+            return response()->json(['message' => 'Comment not found in this post'], 404);
+        }
         // Возвращаем конкретный Коммент со связанными данными
-        return $comment->load(['user', 'post']);
+        $comment->load(['user']);
+        return new CommentResource($comment);
     }
 
     /**
      * Update the specified resource in storage.
      */
     // Метод обновления Коммента
-    public function update(UpdateCommentRequest $request, Comment $comment)
+    public function update(UpdateCommentRequest $request, Comment $comment, Post $post)
     {
-        // Проверяем что Коммент принадлежит текущему пользователю
-        if ($request->user()->id !== $comment->user_id) {
+        // Проверям существование коммента и является ли юзер владельцем
+        if ($comment->post_id !== $post->id || $comment->user_id !== Auth::id()) {
             return response()->json(['message' => 'Forbidden'], 403);
         }
 
         // Обновляем Комментарий
         $comment->update($request->validated());
 
-        // Возвращаем обновленный Комментарий
-        return response()->json($comment);
+        // Предзагружаем связанные данные
+        $comment->load('user');
+
+        // Возвращаем обновленный Комментарий в виде ресурса
+        return new CommentResource($comment);
     }
 
     /**
      * Remove the specified resource from storage.
      */
     // Метод удаления Коммента
-    public function destroy(Request $request, Comment $comment)
+    public function destroy(Post $post, Comment $comment)
     {
-        // Проверяем что Коммент принадлежит текущему пользователю
-        if ($request->user()->id !== $comment->user_id) {
+        // Проверям существование коммента и является ли юзер владельцем
+        if ($comment->post_id !== $post->id || $comment->user_id !== Auth::id()) {
             return response()->json(['message' => 'Forbidden'], 403);
         }
 

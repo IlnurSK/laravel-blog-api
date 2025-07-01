@@ -27,7 +27,7 @@ class UpdateTagRequest extends FormRequest
                 'required',
                 'string',
                 'max:100',
-                Rule::unique('tags', 'name')->ignore($this->tag->id),
+                Rule::unique('tags', 'name')->ignore($this->tag->id ?? null),
             ],
         ];
     }

@@ -14,45 +14,74 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+// Публичные маршруты
+
 // Маршрут регистрации нового пользователя
 Route::post('/register', [RegisterController::class, 'register']);
 // Маршрут авторизации пользователя
 Route::post('/login', [LoginController::class, 'login']);
-// Маршрут выхода из системы, авторизованного пользователя
-Route::post('/logout', [LogoutController::class, 'logout'])->middleware('auth:sanctum');
-
 
 // Маршрут получения всех Постов
 Route::get('/posts', [PostController::class, 'index']);
 // Маршрут получения конкретного Поста
 Route::get('/posts/{post}', [PostController::class, 'show']);
-// Маршрут создания нового Поста, авторизованного пользователя
-Route::post('/posts', [PostController::class, 'store'])->middleware('auth:sanctum');
-// Маршрут обновления Поста, авторизованного пользователя
-Route::put('/posts/{post}', [PostController::class, 'update'])->middleware('auth:sanctum');
-// Маршрут удаления Поста, авторизованного пользователя
-Route::delete('/posts/{post}', [PostController::class, 'destroy'])->middleware('auth:sanctum');
 
-
-// Ресурсный маршрут для Категорий
-Route::apiResource('/categories', CategoryController::class);
+// Маршрут получения всех Категорий
+Route::get('/categories', [CategoryController::class, 'index']);
 // Маршрут получения Постов по Категориям
-Route::get('/categories/{id}/posts', [CategoryController::class, 'posts']);
+Route::get('/categories/{category}/posts', [CategoryController::class, 'posts']);
 
-// Ресурсный маршрут для Тегов
-Route::apiResource('/tags', TagController::class);
+// Маршрут получения всех Тегов
+Route::get('/tags', [TagController::class, 'index']);
+// Маршрут получения Постов по Тегам
+Route::get('/tags/{tag}/posts', [TagController::class, 'posts']);
 
-// Маршрут получения всех Комментариев
-Route::get('/comments', [CommentController::class, 'index']);
-// Маршрут получения конкретного Коммента
-Route::get('/comments/{comment}', [CommentController::class, 'show']);
+// Маршрут получения всех Комментов к Посту
+Route::get('/posts/{post}/comments', [CommentController::class, 'index']);
+// Маршрут получения конкретного коммента к Посту
+Route::get('/posts/{post}/comments/{comment}', [CommentController::class, 'show']);
+
+
+// Защищенные маршруты
 
 Route::middleware('auth:sanctum')->group(function () {
-    // Маршрут создания нового Коммента, авторизованного пользователя
-    Route::post('/comments', [CommentController::class, 'store']);
-    // Маршрут обновления Коммента, авторизованного пользователя
-    Route::put('/comments/{comment}', [CommentController::class, 'update']);
-    // Маршрут удаления Коммента, авторизованного пользователя
-    Route::delete('/comments/{comment}', [CommentController::class, 'destroy']);
+    // Маршрут выхода из системы, авторизованного пользователя
+    Route::post('/logout', [LogoutController::class, 'logout']);
+
+    // CRUD Постов
+    // Маршрут создания нового Поста
+    Route::post('/posts', [PostController::class, 'store']);
+    // Маршрут обновления Поста
+    Route::put('/posts/{post}', [PostController::class, 'update']);
+    // Маршрут удаления Поста
+    Route::delete('/posts/{post}', [PostController::class, 'destroy']);
+
+    // CRUD Комментариев
+    // Маршрут создания нового Коммента
+    Route::post('/posts/{post}/comments', [CommentController::class, 'store']);
+    // Маршрут обновления Коммента
+    Route::put('/posts/{post}/comments/{comment}', [CommentController::class, 'update']);
+    // Маршрут удаления Коммента
+    Route::delete('/posts/{post}/comments/{comment}', [CommentController::class, 'destroy']);
+
+
+    // Категории - только админ
+    Route::middleware('admin')->group(function () {
+        // CRUD Категорий
+        // Маршрут создания Категории
+        Route::post('/categories', [CategoryController::class, 'store']);
+        // Маршрут обновления Категории
+        Route::put('/categories/{category}', [CategoryController::class, 'update']);
+        // Маршрут удаления Категории
+        Route::delete('/categories/{category}', [CategoryController::class, 'destroy']);
+
+        // CRUD Тегов
+        // Маршрут создания Тега
+        Route::post('/tags', [TagController::class, 'store']);
+        // Маршрут обновления Тега
+        Route::put('/tags/{tag}', [TagController::class, 'update']);
+        // Маршрут удаления Тега
+        Route::delete('/tags/{tag}', [TagController::class, 'destroy']);
+    });
 });
 
