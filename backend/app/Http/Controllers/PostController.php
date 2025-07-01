@@ -81,9 +81,6 @@ class PostController extends Controller
     // Метод обновления Поста
     public function update(UpdatePostRequest $request, Post $post)
     {
-        // Проверяем что Пост принадлежит текущему пользователю
-        $this->authorize('update', $post);
-
         // Обновляем Пост
         $data = $request->validated();
         $post->update($data);
@@ -107,9 +104,6 @@ class PostController extends Controller
     // Метод удаления Поста
     public function destroy(Post $post)
     {
-        // Проверяем что Пост принадлежит текущему пользователю
-        $this->authorize('delete', $post);
-
         // Удаляем связанные теги и удаляем Пост
         $post->tags()->detach();
         $post->delete();

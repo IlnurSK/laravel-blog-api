@@ -108,9 +108,9 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}t/api/logout",
+							"raw": "{{base_url}}/api/logout",
 							"host": [
-								"{{base_url}}t"
+								"{{base_url}}"
 							],
 							"path": [
 								"api",
@@ -149,6 +149,45 @@
 							"path": [
 								"api",
 								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /api/posts?category_id=1&tag_id=2",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/posts?category_id=1&tag_id=2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"posts"
+							],
+							"query": [
+								{
+									"key": "category_id",
+									"value": "1"
+								},
+								{
+									"key": "tag_id",
+									"value": "2"
+								}
 							]
 						}
 					},
@@ -258,14 +297,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/posts/32",
+							"raw": "{{base_url}}/api/posts/31",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
 								"posts",
-								"32"
+								"31"
 							]
 						}
 					},
@@ -292,15 +331,24 @@
 								"type": "text"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "{{base_url}}/api/posts/32",
+							"raw": "{{base_url}}/api/posts/31",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
 								"posts",
-								"32"
+								"31"
 							]
 						}
 					},
@@ -341,6 +389,37 @@
 					"response": []
 				},
 				{
+					"name": "GET /categories/{id}/posts",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/categories/1/posts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"categories",
+								"1",
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "POST /api/categories",
 					"protocolProfileBehavior": {
 						"disabledSystemHeaders": {
@@ -353,6 +432,11 @@
 							{
 								"key": "Accept",
 								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
 								"type": "text"
 							}
 						],
@@ -373,6 +457,94 @@
 							"path": [
 								"api",
 								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT /categories/{id}",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"name\": \"Laravel\" }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/categories/6",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"categories",
+								"6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE /categories/{id}",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/categories/6",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"categories",
+								"6"
 							]
 						}
 					},
@@ -413,6 +585,37 @@
 					"response": []
 				},
 				{
+					"name": "GET /api/tags/{id}/posts",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/tags/1/posts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tags",
+								"1",
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "POST /api/tags",
 					"protocolProfileBehavior": {
 						"disabledSystemHeaders": {
@@ -425,6 +628,11 @@
 							{
 								"key": "Accept",
 								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
 								"type": "text"
 							}
 						],
@@ -449,122 +657,9 @@
 						}
 					},
 					"response": []
-				}
-			]
-		},
-		{
-			"name": "Comments",
-			"item": [
-				{
-					"name": "GET /api/comments",
-					"protocolProfileBehavior": {
-						"disabledSystemHeaders": {
-							"accept": true
-						}
-					},
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/comments",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"comments"
-							]
-						}
-					},
-					"response": []
 				},
 				{
-					"name": "GET /api/comments/{id}",
-					"protocolProfileBehavior": {
-						"disabledSystemHeaders": {
-							"accept": true
-						}
-					},
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/comments/62",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"comments",
-								"62"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "POST /api/comments",
-					"protocolProfileBehavior": {
-						"disabledSystemHeaders": {
-							"accept": true
-						}
-					},
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "application/json",
-								"type": "text"
-							},
-							{
-								"key": "Authorization",
-								"value": "{{token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"post_id\": 1, \"body\": \"Отличный пост!\" \r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/comments",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"comments"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "PUT /api/comments/{id}",
+					"name": "PUT /api/tags/{id}",
 					"protocolProfileBehavior": {
 						"disabledSystemHeaders": {
 							"accept": true
@@ -586,7 +681,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"body\": \"Обновлённый комментари\"  \r\n}",
+							"raw": "{ \"name\": \"PHP\" }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -594,21 +689,230 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/comments/62",
+							"raw": "{{base_url}}/api/tags/11",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
-								"comments",
-								"62"
+								"tags",
+								"11"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "DELETE /api/comments/{id}",
+					"name": "PUT /api/tags/{id} Copy",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/tags/11",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"tags",
+								"11"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Comments",
+			"item": [
+				{
+					"name": "GET /api/posts/{post_id}/comments",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/posts/1/comments",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"posts",
+								"1",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /api/posts/{post_id}/comments/{id}",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/posts/32/comments/61",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"posts",
+								"32",
+								"comments",
+								"61"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST /api/posts/{post_id}/comments",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"body\": \"Отличный пост!2\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/posts/32/comments",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"posts",
+								"32",
+								"comments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT /api/posts/{post_id}/comments/{id}",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"body\": \"Обновлённый комментарий\"  \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/posts/32/comments/61",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"posts",
+								"32",
+								"comments",
+								"61"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE /api/posts/{post_id}/comments/{id}",
 					"protocolProfileBehavior": {
 						"disabledSystemHeaders": {
 							"accept": true
@@ -629,12 +933,14 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/api/comments/62",
+							"raw": "{{base_url}}/api/posts/32/comments/62",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
+								"posts",
+								"32",
 								"comments",
 								"62"
 							]

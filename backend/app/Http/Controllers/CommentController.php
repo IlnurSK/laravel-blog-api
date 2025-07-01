@@ -47,7 +47,7 @@ class CommentController extends Controller
      * Display the specified resource.
      */
     // Метод получения конкретного Коммента
-    public function show(Comment $comment, Post $post)
+    public function show(Post $post, Comment $comment)
     {
         // Проверяем существование коммента
         if ($comment->post_id !== $post->id) {
@@ -62,7 +62,7 @@ class CommentController extends Controller
      * Update the specified resource in storage.
      */
     // Метод обновления Коммента
-    public function update(UpdateCommentRequest $request, Comment $comment, Post $post)
+    public function update(UpdateCommentRequest $request, Post $post, Comment $comment)
     {
         // Проверям существование коммента и является ли юзер владельцем
         if ($comment->post_id !== $post->id || $comment->user_id !== Auth::id()) {
