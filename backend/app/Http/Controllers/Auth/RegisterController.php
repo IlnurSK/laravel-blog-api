@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
@@ -14,12 +13,15 @@ class RegisterController extends Controller
     /**
      * Регистрация нового пользователя
      *
-     * @bodyParam name string required Имя пользователя. Example: John Doe
-     * @bodyParam email string required Email. Example: john@example.com
-     * @bodyParam password string required Пароль (мин. 8 символов). Example: password123
+     * @bodyParam name string required Имя пользователя. Example: Ivan
+     * @bodyParam email string required Email. Example: user@example.com
+     * @bodyParam password string required Пароль. Example: password123
      * @bodyParam password_confirmation string required Подтверждение пароля. Example: password123
+     *
+     * @response 201 {
+     *   "message": "User registered successfully."
+     * }
      */
-    // Метод регистрации
     public function register(RegisterRequest $request): JsonResponse
     {
         // Создаем нового пользователя

@@ -27,34 +27,4 @@ class RegisterRequest extends FormRequest
             'password' => 'required|string|min:8|confirmed',
         ];
     }
-
-    public function bodyParameters(): array
-    {
-        return [
-            'name' => [
-                'description' => 'Полное имя пользователя',
-                'example' => 'Иван Иванов',
-                'required' => true,
-                'rules' => 'string|max:255',
-                'type' => 'string'
-            ],
-            'email' => [
-                'description' => 'Уникальный email пользователя',
-                'example' => 'user@example.com',
-                'required' => true,
-                'rules' => 'email|max:255|unique:users,email',
-                'type' => 'string'
-            ],
-            'password' => [
-                'description' => 'Пароль (мин. 8 символов)',
-                'example' => 'Secret123', // Фиксированное значение
-                'required' => true
-            ],
-            'password_confirmation' => [
-                'description' => 'Подтверждение пароля',
-                'example' => 'Secret123', // Точно такое же!
-                'required' => true
-            ]
-        ];
-    }
 }

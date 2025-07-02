@@ -8,7 +8,12 @@ use Illuminate\Http\Request;
 
 class LogoutController extends Controller
 {
-    // Метод logout (выход из системы)
+    /**
+     * Выход пользователя (инвалидирует токен)
+     *
+     * @authenticated
+     * @response 204 {}
+     */
     public function logout(Request $request): JsonResponse
     {
         // Удаляем токен текущего пользователя

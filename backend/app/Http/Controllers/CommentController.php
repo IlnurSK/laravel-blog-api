@@ -7,15 +7,14 @@ use App\Http\Requests\UpdateCommentRequest;
 use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use App\Models\Post;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Получить комментарии к посту
+     * @urlParam post_id int required ID поста. Example: 1
      */
-    // Метод получения всех Комментов Поста
     public function index(Post $post)
     {
         // Возвращаем все Комменты со связанными данными, в виде постраничного списка
@@ -25,9 +24,12 @@ class CommentController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Добавить комментарий
+     *
+     * @authenticated
+     * @bodyParam body string required Текст комментария. Example: Отличная статья!
+     * @urlParam post_id int required ID поста. Example: 1
      */
-    // Метод сохранения нового Коммента
     public function store(StoreCommentRequest $request, Post $post)
     {
         // Создание нового Коммента (валидированного) к Посту, с привязкой ID юзера
@@ -44,9 +46,10 @@ class CommentController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Получить один комментарий
+     * @urlParam post_id int required ID поста. Example: 1
+     * @urlParam comment_id int ID комментария. Example: 1
      */
-    // Метод получения конкретного Коммента
     public function show(Post $post, Comment $comment)
     {
         // Проверяем существование коммента
@@ -59,9 +62,13 @@ class CommentController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
-     */
-    // Метод обновления Коммента
+     * Обновить комментарий
+     *
+     * @authenticated
+     * @bodyParam body string required Текст комментария. Example: Обновленный текст
+     * @urlParam post_id int required ID поста. Example: 1
+     * @urlParam comment_id int ID комментария. Example: 1
+ */
     public function update(UpdateCommentRequest $request, Post $post, Comment $comment)
     {
         // Проверям существование коммента и является ли юзер владельцем
@@ -80,9 +87,12 @@ class CommentController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     */
-    // Метод удаления Коммента
+     * Удалить комментарий
+     *
+     * @authenticated
+     * @urlParam post_id int required ID поста. Example: 1
+     * @urlParam comment_id int ID комментария. Example: 1
+ */
     public function destroy(Post $post, Comment $comment)
     {
         // Проверям существование коммента и является ли юзер владельцем

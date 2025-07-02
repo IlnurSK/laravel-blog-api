@@ -25,18 +25,4 @@ class StoreCommentRequest extends FormRequest
             'body' => 'required|string|max:1000',
         ];
     }
-
-    public function bodyParameters(): array
-    {
-        return [
-            'body' => [
-                'description' => 'Текст комментария',
-                'example' => 'Это очень полезная статья, спасибо автору!',
-                'required' => true,
-                'type' => 'string',
-                'rules' => 'required|string|max:1000',
-                'notes' => 'Максимальная длина - 1000 символов'
-            ]
-        ];
-    }
 }

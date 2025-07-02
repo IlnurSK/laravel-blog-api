@@ -13,18 +13,23 @@ use Illuminate\Support\Facades\Auth;
 class TagController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Получить список тегов
+     *
+     * @response 200 [
+     *   {"id": 1, "name": "PHP"}
+     * ]
      */
-    // Метод получения всех Тегов
     public function index()
     {
         return TagResource::collection(Tag::all());
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Создать тег
+     *
+     * @authenticated
+     * @bodyParam name string required Название тега. Example: Laravel
      */
-    // Метод получения нового Тега
     public function store(StoreTagRequest $request)
     {
         // Проверяем является ли Юзер Админом
@@ -40,19 +45,21 @@ class TagController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Получить конкретную категорию
+     *
      */
-
-    // Метод получения конкретного Тега
     public function show(Tag $tag)
     {
         return new TagResource($tag);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Обновить тег
+     *
+     * @authenticated
+     * @bodyParam name string required Название тега. Example: REST API
+     * @urlParam tag_id int required ID тега. Example: 1
      */
-    // Метод обновления Тега
     public function update(UpdateTagRequest $request, Tag $tag)
     {
         // Проверяем является ли Юзер Админом
@@ -68,9 +75,11 @@ class TagController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Удалить тег
+     *
+     * @authenticated
+     * @urlParam tag_id int required ID тега. Example: 1
      */
-    // Метод удаления текущего Тега
     public function destroy(Tag $tag)
     {
         // Проверяем является ли Юзер Админом
@@ -83,7 +92,10 @@ class TagController extends Controller
         return response()->json(['message' => 'Tag deleted']);
     }
 
-    // Метод получения всех Постов по Тегу
+    /**
+     * Получить посты по тегу
+     * @urlParam tag_id int required ID тега. Example: 1
+     */
     public function posts(Tag $tag)
     {
         $posts = $tag->posts()->with(['user', 'category'])->latest()->paginate(10);

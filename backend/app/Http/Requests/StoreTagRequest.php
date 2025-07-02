@@ -25,18 +25,4 @@ class StoreTagRequest extends FormRequest
             'name' => 'required|string|max:100|unique:tags,name',
         ];
     }
-
-    public function bodyParameters(): array
-    {
-        return [
-            'name' => [
-                'description' => 'Название тега',
-                'example' => 'Laravel',
-                'required' => true,
-                'type' => 'string',
-                'rules' => 'required|string|max:100|unique:tags,name',
-                'notes' => 'Название должно быть уникальным среди всех тегов'
-            ]
-        ];
-    }
 }

@@ -10,7 +10,16 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    // Метод логина (авторизации)
+    /**
+     * Вход пользователя
+     *
+     * @bodyParam email string required Email пользователя. Example: user@example.com
+     * @bodyParam password string required Пароль. Example: password123
+     *
+     * @response 200 {
+     *   "token": "..."
+     * }
+     */
     public function login(LoginRequest $request): JsonResponse
     {
         // Проверка учетных данных

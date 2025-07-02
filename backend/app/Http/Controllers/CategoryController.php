@@ -7,26 +7,28 @@ use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\PostResource;
 use App\Models\Category;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Получить все категории
+     *
+     * @response 200 [
+     *   {"id": 1, "name": "Laravel"}
+     * ]
      */
-
-    // Метод получения всех Категорий
     public function index()
     {
         return CategoryResource::collection(Category::all());
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Создать новую категорию
+     *
+     * @authenticated
+     * @bodyParam name string required Название категории. Example: Laravel
      */
-
-    // Метод сохранения новой Категории
     public function store(StoreCategoryRequest $request)
     {
         // Проверяем является ли юзер админом
@@ -42,20 +44,20 @@ class CategoryController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Получить конкретную категорию
+     *
      */
-
-    // Метод получения конкретной категории
     public function show(Category $category)
     {
         return new CategoryResource($category);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Обновить категорию
+     *
+     * @authenticated
+     * @bodyParam name string required Название категории. Example: Обновленная
      */
-
-    // Метод получения обновленной Категории
     public function update(UpdateCategoryRequest $request, Category $category)
     {
         // Проверяем является ли Юзер админом
@@ -71,10 +73,11 @@ class CategoryController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Удалить категорию
+     *
+     * @authenticated
+     * @urlParam category_id int required ID категории. Example: 1
      */
-
-    // Метод удаления Категории, возвращает сообщение об успехе
     public function destroy(Category $category)
     {
         // Проверяем является ли Юзер Админом
@@ -88,7 +91,10 @@ class CategoryController extends Controller
         return response()->json(['message' => 'Category deleted']);
     }
 
-    // Метод вывода всех Постов связанных с Категорией
+    /**
+     * Получить посты по категории
+     * @urlParam category_id int required ID категории. Example: 1
+     */
     public function posts(Category $category)
     {
         $posts = $category->posts()->with(['user', 'tags'])->latest()->paginate(10);

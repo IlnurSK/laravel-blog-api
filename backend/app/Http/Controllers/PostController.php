@@ -12,10 +12,11 @@ use Illuminate\Support\Facades\Auth;
 class PostController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Получить все посты
+     *
+     * @queryParam category_id int ID категории. Example: 1
+     * @queryParam tag_ids integer[] Массив ID тегов. Example: [1, 2]
      */
-
-    // Метод получения всех Постов
     public function index(Request $request)
     {
         // Получаем все Посты со связанными данными
@@ -27,9 +28,13 @@ class PostController extends Controller
         }
 
         // Если указаны Теги, фильтруем Посты
-        if ($request->has('tag_id')) {
-            $query->whereHas('tags', function ($q) use ($request) {
-                $q->where('tags.id', $request->input('tag_id'));
+        if ($request->has('tag_ids')) {
+            $tagIds = $request->input('tag_ids');
+            if (is_string($tagIds)) {
+                $tagIds = explode(',', $tagIds); // поддержка строки "1,2"
+            }
+            $query->whereHas('tags', function ($q) use ($tagIds) {
+                $q->whereIn('tags.id', (array) $tagIds);
             });
         }
 
@@ -39,10 +44,15 @@ class PostController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Создать новый пост
+     *
+     * @authenticated
+     * @bodyParam title string required Заголовок поста. Example: Laravel REST API
+     * @bodyParam body string required Текст поста. Example: Содержание статьи
+     * @bodyParam category_id int ID категории (опционально). Example: 1
+     * @bodyParam tag_ids integer[] Массив ID тегов. Example: [1, 2]
+     * @bodyParam is_published bool Опубликовано (по умолчанию false). Example: false
      */
-
-    // Метод сохранения нового Поста
     public function store(StorePostRequest $request)
     {
         // Получаем валидированную информацию
@@ -63,10 +73,9 @@ class PostController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Получить пост по ID
+     * @urlParam post_id int required ID поста. Example: 1
      */
-
-    // Метод получения конкретного Поста
     public function show(Post $post)
     {
         // Возвращаем конкретный Пост со связанными данными
@@ -75,10 +84,16 @@ class PostController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Обновить пост
+     *
+     * @authenticated
+     * @bodyParam title string Заголовок. Example: Новый заголовок
+     * @bodyParam body string Контент. Example: Обновленное содержание
+     * @bodyParam category_id int ID категории. Example: 2
+     * @bodyParam tag_ids integer[] Массив ID тегов. Example: [1, 2]
+     * @bodyParam is_published boolean Опубликовано (по умолчанию false). Example: false
+     * @urlParam post_id int required ID поста. Example: 1
      */
-
-    // Метод обновления Поста
     public function update(UpdatePostRequest $request, Post $post)
     {
         // Обновляем Пост
@@ -98,10 +113,11 @@ class PostController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Удалить пост
+     *
+     * @authenticated
+     * @urlParam post_id int required ID поста. Example: 1
      */
-
-    // Метод удаления Поста
     public function destroy(Post $post)
     {
         // Удаляем связанные теги и удаляем Пост
