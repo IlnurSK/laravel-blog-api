@@ -25,7 +25,7 @@ class StorePostRequest extends FormRequest
             'title' => 'required|string|max:255',
             'body' => 'required|string',
             'category_id' => 'nullable|int|exists:categories,id',
-            'tag_ids' => 'array',
+            'tag_ids' => 'nullable|array',
             'tag_ids.*' => 'exists:tags,id',
             'is_published' => 'boolean',
         ];

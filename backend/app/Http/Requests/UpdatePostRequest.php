@@ -24,8 +24,8 @@ class UpdatePostRequest extends FormRequest
         return [
             'title' => 'sometimes|required|string|max:255',
             'body' => 'sometimes|required|string',
-            'category_id' => 'nullable|exists:categories,id',
-            'tag_ids' => 'sometimes|array',
+            'category_id' => 'nullable|int|exists:categories,id',
+            'tag_ids' => 'nullable|array',
             'tag_ids.*' => 'exists:tags,id',
             'is_published' => 'sometimes|boolean',
         ];

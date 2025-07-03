@@ -95,7 +95,7 @@ class CommentController extends Controller
  */
     public function destroy(Post $post, Comment $comment)
     {
-        // Проверям существование коммента и является ли юзер владельцем
+        // Проверяeм существование коммента и является ли юзер владельцем
         if ($comment->post_id !== $post->id || $comment->user_id !== Auth::id()) {
             return response()->json(['message' => 'Forbidden'], 403);
         }

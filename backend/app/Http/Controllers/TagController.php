@@ -7,7 +7,6 @@ use App\Http\Requests\UpdateTagRequest;
 use App\Http\Resources\PostResource;
 use App\Http\Resources\TagResource;
 use App\Models\Tag;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class TagController extends Controller

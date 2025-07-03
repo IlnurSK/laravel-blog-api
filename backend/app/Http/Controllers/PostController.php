@@ -50,7 +50,7 @@ class PostController extends Controller
      * @bodyParam title string required Заголовок поста. Example: Laravel REST API
      * @bodyParam body string required Текст поста. Example: Содержание статьи
      * @bodyParam category_id int ID категории (опционально). Example: 1
-     * @bodyParam tag_ids integer[] Массив ID тегов. Example: [1, 2]
+     * @bodyParam tag_ids array Массив ID тегов (опционально). Example: [1, 2]
      * @bodyParam is_published bool Опубликовано (по умолчанию false). Example: false
      */
     public function store(StorePostRequest $request)
@@ -89,8 +89,8 @@ class PostController extends Controller
      * @authenticated
      * @bodyParam title string Заголовок. Example: Новый заголовок
      * @bodyParam body string Контент. Example: Обновленное содержание
-     * @bodyParam category_id int ID категории. Example: 2
-     * @bodyParam tag_ids integer[] Массив ID тегов. Example: [1, 2]
+     * @bodyParam category_id int ID категории (опционально). Example: 2
+     * @bodyParam tag_ids array Массив ID тегов (опционально). Example: [2, 3]
      * @bodyParam is_published boolean Опубликовано (по умолчанию false). Example: false
      * @urlParam post_id int required ID поста. Example: 1
      */
@@ -120,6 +120,11 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        // Проверяем является ли юзер автором поста, и существует ли пост
+        if (Auth::user()->id !== $post->user_id) {
+            abort(403, 'Forbidden');
+        }
+
         // Удаляем связанные теги и удаляем Пост
         $post->tags()->detach();
         $post->delete();
