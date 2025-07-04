@@ -14,6 +14,11 @@
             <input type="email" name="email" required class="w-full border px-3 py-2 rounded">
         </div>
 
+        <div>
+            <label class="block text-sm font-medium">Пароль</label>
+            <input type="password" name="password" required class="w-full border px-3 py-2 rounded">
+        </div>
+
         <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded">
             Войти
         </button>

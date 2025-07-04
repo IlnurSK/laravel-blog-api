@@ -1,7 +1,11 @@
 <?php
 
 use App\Http\Controllers\Web\AuthController;
+use App\Http\Controllers\Web\HomeController;
 use Illuminate\Support\Facades\Route;
+
+// Маршрут стартовой страницы
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Маршрут получения формы логина
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');

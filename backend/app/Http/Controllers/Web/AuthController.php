@@ -63,7 +63,7 @@ class AuthController extends Controller
     }
 
     // Метод выхода из системы (логаут)
-    public function logout(Request $request)
+    public function logout()
     {
         // Отправляем токен сессии на API логаута
         Http::withToken(Session::get('token'))->post(config('app.url') . '/api/logout');
