@@ -8,10 +8,16 @@ use App\Http\Requests\UpdateCommentRequest;
 use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use App\Models\Post;
+use App\Services\CommentService;
 use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
+    // Истанцируем CommentService
+    public function __construct(protected CommentService $commentService)
+    {
+    }
+
     /**
      * Получить комментарии к посту
      * @urlParam post_id int required ID поста. Example: 1
@@ -33,17 +39,15 @@ class CommentController extends Controller
      */
     public function store(StoreCommentRequest $request, Post $post)
     {
-        // Создание нового Коммента (валидированного) к Посту, с привязкой ID юзера
-        $comment = $post->comments()->create([
-            'body'    => $request->validated('body'),
-            'user_id' => Auth::id(),
-        ]);
+        // Создаем коммент
+        $comment = $this->commentService->create(
+            $request->validated(),
+            $post,
+            Auth::user()
+        );
 
-        // Предзагружаем связанные данные по Юзеру
-        $comment->load('user');
-
-        // Возвращаем новый Коммент в виде ресурса
-        return new CommentResource($comment);
+        // Возвращаем новый Коммент в виде ресурса, предзагружая связи
+        return new CommentResource($comment->load(['user', 'post']));
     }
 
     /**
@@ -70,18 +74,12 @@ class CommentController extends Controller
      * @urlParam post_id int required ID поста. Example: 1
      * @urlParam comment_id int ID комментария. Example: 1
  */
-    public function update(UpdateCommentRequest $request, Post $post, Comment $comment)
+    public function update(UpdateCommentRequest $request, Comment $comment)
     {
-        // Проверям существование коммента и является ли юзер владельцем
-        if ($comment->post_id !== $post->id || $comment->user_id !== Auth::id()) {
-            return response()->json(['message' => 'Forbidden'], 403);
-        }
+        // Проверям является ли юзер владельцем
+        $this->authorize('update', $comment);
 
-        // Обновляем Комментарий
-        $comment->update($request->validated());
-
-        // Предзагружаем связанные данные
-        $comment->load('user');
+        $comment = $this->commentService->update($comment, $request->validated());
 
         // Возвращаем обновленный Комментарий в виде ресурса
         return new CommentResource($comment);
@@ -94,17 +92,15 @@ class CommentController extends Controller
      * @urlParam post_id int required ID поста. Example: 1
      * @urlParam comment_id int ID комментария. Example: 1
  */
-    public function destroy(Post $post, Comment $comment)
+    public function destroy(Comment $comment)
     {
-        // Проверяeм существование коммента и является ли юзер владельцем
-        if ($comment->post_id !== $post->id || $comment->user_id !== Auth::id()) {
-            return response()->json(['message' => 'Forbidden'], 403);
-        }
+        // Проверяeм является ли юзер владельцем
+        $this->authorize('delete', $comment);
 
         // Удаляем Коммент
-        $comment->delete();
+        $this->commentService->delete($comment);
 
-        // Возвращаем сообщение об успехе
-        return response()->json(['message' => 'Comment deleted']);
+        // Возвращаем сообщение об отсутствии контента
+        return response()->noContent();
     }
 }

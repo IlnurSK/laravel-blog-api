@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 class PostController extends Controller
 {
     // Инстанцируем PostService
-    public function __construct(private PostService $postService)
+    public function __construct(private readonly PostService $postService)
     {
     }
 
