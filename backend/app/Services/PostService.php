@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Http\Resources\PostResource;
+use App\Models\Category;
 use App\Models\Post;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Auth;
 
 class PostService
@@ -41,6 +44,16 @@ class PostService
         // Удаляем связанные теги и удаляем Пост
         $post->tags()->detach();
         $post->delete();
+    }
+
+    public function getPostsByCategory(Category $category): AnonymousResourceCollection
+    {
+        $posts = $category->posts()
+            ->with(['user', 'category', 'tags'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return PostResource::collection($posts);
     }
 
 }

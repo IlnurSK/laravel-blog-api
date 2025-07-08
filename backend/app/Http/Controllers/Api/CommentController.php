@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 class CommentController extends Controller
 {
     // Истанцируем CommentService
-    public function __construct(protected CommentService $commentService)
+    public function __construct(private readonly CommentService $commentService)
     {
     }
 

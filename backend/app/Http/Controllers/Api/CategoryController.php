@@ -8,10 +8,19 @@ use App\Http\Requests\UpdateCategoryRequest;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\PostResource;
 use App\Models\Category;
+use App\Services\CategoryService;
+use App\Services\PostService;
 use Illuminate\Support\Facades\Auth;
 
 class CategoryController extends Controller
 {
+    // Инстанцируем CategoryService
+    public function __construct(
+        private readonly CategoryService $categoryService,
+        private readonly PostService $postService
+    ) {
+    }
+
     /**
      * Получить все категории
      *
@@ -21,7 +30,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return CategoryResource::collection(Category::all());
+        $categories = $this->categoryService->index();
+        return CategoryResource::collection($categories);
     }
 
     /**
@@ -33,14 +43,12 @@ class CategoryController extends Controller
     public function store(StoreCategoryRequest $request)
     {
         // Проверяем является ли юзер админом
-        if (!Auth::user()->is_admin) {
-            return response()->json(['message' => 'Forbidden'], 403);
-        }
+        $this->authorize('create', Category::class);
 
-        // Создаем экземпляр новой Категории
-        $category = Category::create($request->validated());
+        // Создаем новую категорию
+        $category = $this->categoryService->create($request->validated());
 
-        // Возвращаем ресурсный класс
+        // Возвращаем новый ресурсный класс
         return new CategoryResource($category);
     }
 
@@ -62,12 +70,10 @@ class CategoryController extends Controller
     public function update(UpdateCategoryRequest $request, Category $category)
     {
         // Проверяем является ли Юзер админом
-        if (!Auth::user()->is_admin) {
-            return response()->json(['message' => 'Forbidden'], 403);
-        }
+        $this->authorize('update', $category);
 
         // Обновляем валидированные данные в текущей Категории
-        $category->update($request->validated());
+        $category = $this->categoryService->update($category, $request->validated());
 
         // Возвращаем обновленную категорию в виде ресурса
         return new CategoryResource($category);
@@ -82,12 +88,10 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         // Проверяем является ли Юзер Админом
-        if (!Auth::user()->is_admin) {
-            return response()->json(['message' => 'Forbidden'], 403);
-        }
+        $this->authorize('delete', $category);
 
         // Удаляем категорию
-        $category->delete();
+        $this->categoryService->delete($category);
 
         return response()->json(['message' => 'Category deleted']);
     }
@@ -98,8 +102,6 @@ class CategoryController extends Controller
      */
     public function posts(Category $category)
     {
-        $posts = $category->posts()->with(['user', 'tags'])->latest()->paginate(10);
-
-        return PostResource::collection($posts);
+        return $this->postService->getPostsByCategory($category);
     }
 }
