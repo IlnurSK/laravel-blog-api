@@ -7,11 +7,17 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
+use App\Services\PostService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
+    // Инстанцируем PostService
+    public function __construct(private PostService $postService)
+    {
+    }
+
     /**
      * Получить все посты
      *
@@ -56,18 +62,11 @@ class PostController extends Controller
      */
     public function store(StorePostRequest $request)
     {
-        // Получаем валидированную информацию
-        $data = $request->validated();
+        // Проверям права пользователя на создание Поста
+        $this->authorize('create', Post::class);
 
-        // Создаем пост с авторизованны юзером
-        $post = Auth::user()->posts()->create($data);
-
-        // Если в запросе есть Теги, привязываем их к Посту
-        if (isset($data['tag_ids'])) {
-            $post->tags()->attach($data['tag_ids']);
-        }
-        // Предзагружаем связанные данные
-        $post->load(['user', 'category', 'tags']);
+        // Получаем новый Пост с валидированной информацией
+        $post = $this->postService->create($request->validated());
 
         // Возвращаем новый Пост в виде ресурса
         return new PostResource($post);
@@ -97,17 +96,11 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
+        // Проверям права пользователя на создание Поста
+        $this->authorize('update', $post);
+
         // Обновляем Пост
-        $data = $request->validated();
-        $post->update($data);
-
-        // Если в запросе есть Теги, привязываем их к Посту
-        if (isset($data['tag_ids'])) {
-            $post->tags()->sync($data['tag_ids']);
-        }
-
-        // Предзагружаем обновленный Пост с тегами
-        $post->load(['user', 'category', 'tags']);
+        $post = $this->postService->update($post, $request->validated());
 
         // Возвращаем обновленный Пост в виде ресурса
         return new PostResource($post);
@@ -121,14 +114,11 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        // Проверяем является ли юзер автором поста, и существует ли пост
-        if (Auth::user()->id !== $post->user_id) {
-            abort(403, 'Forbidden');
-        }
+        // Проверям права пользователя на удаление Поста
+        $this->authorize('delete', $post);
 
-        // Удаляем связанные теги и удаляем Пост
-        $post->tags()->detach();
-        $post->delete();
+        // Удаляем пост
+        $this->postService->delete($post);
 
         // Возвращаем сообщение об успехе
         return response()->json(['message' => 'Post deleted']);
