@@ -10,7 +10,8 @@ use App\Http\Resources\PostResource;
 use App\Models\Category;
 use App\Services\CategoryService;
 use App\Services\PostService;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class CategoryController extends Controller
 {
@@ -28,7 +29,7 @@ class CategoryController extends Controller
      *   {"id": 1, "name": "Laravel"}
      * ]
      */
-    public function index()
+    public function index(): AnonymousResourceCollection
     {
         $categories = $this->categoryService->index();
         return CategoryResource::collection($categories);
@@ -40,7 +41,7 @@ class CategoryController extends Controller
      * @authenticated
      * @bodyParam name string required Название категории. Example: Laravel
      */
-    public function store(StoreCategoryRequest $request)
+    public function store(StoreCategoryRequest $request): CategoryResource
     {
         // Проверяем является ли юзер админом
         $this->authorize('create', Category::class);
@@ -56,7 +57,7 @@ class CategoryController extends Controller
      * Получить конкретную категорию
      *
      */
-    public function show(Category $category)
+    public function show(Category $category): CategoryResource
     {
         return new CategoryResource($category);
     }
@@ -67,7 +68,7 @@ class CategoryController extends Controller
      * @authenticated
      * @bodyParam name string required Название категории. Example: Обновленная
      */
-    public function update(UpdateCategoryRequest $request, Category $category)
+    public function update(UpdateCategoryRequest $request, Category $category): CategoryResource
     {
         // Проверяем является ли Юзер админом
         $this->authorize('update', $category);
@@ -85,7 +86,7 @@ class CategoryController extends Controller
      * @authenticated
      * @urlParam category_id int required ID категории. Example: 1
      */
-    public function destroy(Category $category)
+    public function destroy(Category $category): JsonResponse
     {
         // Проверяем является ли Юзер Админом
         $this->authorize('delete', $category);
@@ -100,8 +101,9 @@ class CategoryController extends Controller
      * Получить посты по категории
      * @urlParam category_id int required ID категории. Example: 1
      */
-    public function posts(Category $category)
+    public function posts(Category $category): AnonymousResourceCollection
     {
-        return $this->postService->getPostsByCategory($category);
+        $posts = $this->postService->getPostsByCategory($category);
+        return PostResource::collection($posts);
     }
 }

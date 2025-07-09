@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Http\Resources\PostResource;
 use App\Models\Category;
 use App\Models\Post;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use App\Models\Tag;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
 
 class PostService
@@ -46,14 +46,20 @@ class PostService
         $post->delete();
     }
 
-    public function getPostsByCategory(Category $category): AnonymousResourceCollection
+    public function getPostsByCategory(Category $category): LengthAwarePaginator
     {
-        $posts = $category->posts()
+        return $category->posts()
             ->with(['user', 'category', 'tags'])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
+    }
 
-        return PostResource::collection($posts);
+    public function getPostsByTag(Tag $tag): LengthAwarePaginator
+    {
+        return $tag->posts()
+            ->with(['user', 'category', 'tags'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
     }
 
 }

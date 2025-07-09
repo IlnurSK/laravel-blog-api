@@ -5,13 +5,22 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTagRequest;
 use App\Http\Requests\UpdateTagRequest;
-use App\Http\Resources\PostResource;
 use App\Http\Resources\TagResource;
 use App\Models\Tag;
-use Illuminate\Support\Facades\Auth;
+use App\Services\PostService;
+use App\Services\TagService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class TagController extends Controller
 {
+    // Инстанцируем TagService
+    public function __construct(
+        private readonly TagService $tagService,
+        private readonly PostService $postService
+    ) {
+    }
+
     /**
      * Получить список тегов
      *
@@ -19,9 +28,10 @@ class TagController extends Controller
      *   {"id": 1, "name": "PHP"}
      * ]
      */
-    public function index()
+    public function index(): AnonymousResourceCollection
     {
-        return TagResource::collection(Tag::all());
+        $tags = $this->tagService->index();
+        return TagResource::collection($tags);
     }
 
     /**
@@ -30,15 +40,13 @@ class TagController extends Controller
      * @authenticated
      * @bodyParam name string required Название тега. Example: Laravel
      */
-    public function store(StoreTagRequest $request)
+    public function store(StoreTagRequest $request): TagResource
     {
         // Проверяем является ли Юзер Админом
-        if (!Auth::user()->is_admin) {
-            return response()->json(['message' => 'Forbidden'], 403);
-        }
+        $this->authorize('create', Tag::class);
 
         // Получаем экземпляр нового отвалидированного Тега
-        $tag = Tag::create($request->validated());
+        $tag = $this->tagService->create($request->validated());
 
         // Возвращаем новый ресурс Тега
         return new TagResource($tag);
@@ -48,7 +56,7 @@ class TagController extends Controller
      * Получить конкретную категорию
      *
      */
-    public function show(Tag $tag)
+    public function show(Tag $tag): TagResource
     {
         return new TagResource($tag);
     }
@@ -60,15 +68,13 @@ class TagController extends Controller
      * @bodyParam name string required Название тега. Example: REST API
      * @urlParam tag_id int required ID тега. Example: 1
      */
-    public function update(UpdateTagRequest $request, Tag $tag)
+    public function update(UpdateTagRequest $request, Tag $tag): TagResource
     {
         // Проверяем является ли Юзер Админом
-        if (!Auth::user()->is_admin) {
-            return response()->json(['message' => 'Forbidden'], 403);
-        }
+        $this->authorize('update', $tag);
 
         // Обновляем текущий Тег валидированными данными
-        $tag->update($request->validated());
+        $tag = $this->tagService->update($tag, $request->validated());
 
         // Возвращаем обновленный Тег в виде ресурса
         return new TagResource($tag);
@@ -80,14 +86,12 @@ class TagController extends Controller
      * @authenticated
      * @urlParam tag_id int required ID тега. Example: 1
      */
-    public function destroy(Tag $tag)
+    public function destroy(Tag $tag): JsonResponse
     {
         // Проверяем является ли Юзер Админом
-        if (!Auth::user()->is_admin) {
-            return response()->json(['message' => 'Forbidden'], 403);
-        }
+        $this->authorize('delete', $tag);
 
-        $tag->delete();
+        $this->tagService->delete($tag);
 
         return response()->json(['message' => 'Tag deleted']);
     }
@@ -96,10 +100,9 @@ class TagController extends Controller
      * Получить посты по тегу
      * @urlParam tag_id int required ID тега. Example: 1
      */
-    public function posts(Tag $tag)
+    public function posts(Tag $tag): AnonymousResourceCollection
     {
-        $posts = $tag->posts()->with(['user', 'category'])->latest()->paginate(10);
-
-        return PostResource::collection($posts);
+        $tags = $this->postService->getPostsByTag($tag);
+        return TagResource::collection($tags);
     }
 }
