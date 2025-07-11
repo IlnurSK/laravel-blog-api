@@ -13,7 +13,6 @@ class HomeController extends Controller
      * @throws ConnectionException
      */
     // Метод отображения главной страницы, с получением данных по API
-
     public function index(Request $request)
     {
         // Создаем запрос с категориями и тегами
@@ -39,7 +38,5 @@ class HomeController extends Controller
 
         // Возвращаем представление стартовой страницы и передаем туда все данные
         return view('home.index', compact('posts', 'meta', 'categories', 'tags'));
-
-
     }
 }
