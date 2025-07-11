@@ -17,7 +17,7 @@ Route::post('/register', [RegisterController::class, 'register']);
 Route::post('/login', [LoginController::class, 'login']);
 
 // Маршрут получения всех Постов
-Route::get('/posts', [PostController::class, 'index']);
+Route::get('/posts', [PostController::class, 'index'])->name('api.posts');
 // Маршрут получения конкретного Поста
 Route::get('/posts/{post}', [PostController::class, 'show']);
 
