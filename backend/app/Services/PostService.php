@@ -62,4 +62,26 @@ class PostService
             ->paginate(10);
     }
 
+    // Метод фильтрации постов по Категории и Тегам
+    public function getFilteredPosts($categoryId = null, array $tagIds = []): LengthAwarePaginator
+    {
+        // Создаем запрос к Постам, со связанными пользователями, категориями и тегами
+        $query = Post::with(['user', 'category', 'tags']);
+
+        // Если есть ID категории, то добавляем в запрос категорию
+        if ($categoryId) {
+            $query->where('posts.category_id', $categoryId);
+        }
+
+        // Если массив Тегов не пустой, то добавляем в запрос теги
+        if (!empty($tagIds)) {
+            $query->whereHas('tags', function ($q) use ($tagIds) {
+                $q->whereIn('tags.id', $tagIds);
+            });
+        }
+
+        // Возвращаем запрос с фильтром по свежести и пагинацией на 10
+        return $query->latest()->paginate(10);
+    }
+
 }

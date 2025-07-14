@@ -3,24 +3,54 @@
 @section('title', 'Главная страница')
 
 @section('content')
-    <h1 class="text-2xl font-bold mb-6">Последние посты</h1>
+    <h1 class="text-2xl font-bold mb-4">Последние посты</h1>
+
+    <form method="GET" action="{{ route('home') }}" class="mb-6 flex flex-wrap gap-4 items-end">
+        <div>
+            <label for="category_id" class="block text-sm font-medium">Категория</label>
+            <select name="category_id" id="category_id" class="border rounded p-1">
+                <option value="">Все</option>
+                @foreach($categories as $category)
+                    <option value="{{ $category->id }}" {{ $categoryId == $category->id ? 'selected' : ''}}>
+                    {{ $category->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div>
+            <label for="tag_ids" class="block text-sm font-medium">Теги</label>
+            <select name="tag_ids[]" id="tag_ids" multiple class="border rounded p-1">
+                @foreach($tags as $tag)
+                    <option value="{{ $tag->id }}" {{ in_array($tag->id, (array)$tagIds) ? 'selected' : ''}}>
+                        {{ $tag->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
+            Фильтровать
+        </button>
+    </form>
 
     @forelse($posts as $post)
-        <div class="bg-white p-6 rounded shadow mb-6">
-            <h2 class="text-xl font-semibold text-blue-600">{{ $post['title'] }}</h2>
-            <p class="text-gray-600 text-sm mb-2">
-                Автор: {{ $post['user']['name'] ?? 'Неизвестно' }} |
-                Категория: {{ $post['category']['name'] ?? 'Без категории' }} |
-                {{ \Carbon\Carbon::parse($post['created_at'])->translatedFormat('d M Y H:i') }}
-            </p>
-            <div class="mb-2">
-                @foreach($post['tags'] as $tag)
-                    <span class="inline-block bg-gray-200 text-sm text-gray-700 px-2 py-1 rounded mr-2">#{{ $tag['name'] }}</span>
+        <div class="bg-white shadow rounded p-4 mb-4">
+            <h2 class="text-xl font-semibold">
+                <a href="#">{{ $post->title }}</a>
+            </h2>
+            <p class="text-sm text-gray-600">Автор: {{ $post->user->name }} | Категория: {{ $post->$category->name ?? '-' }}</p>
+            <div class="text-sm text-gray-500 mt-1">
+                Теги:
+                @foreach($post->tags as $tag)
+                    <span class="bg-gray-200 px-2 py-0.5 rounded text-xs">{{ $tag->name }}</span>
                 @endforeach
             </div>
-            <a href="#" class="text-blue-500 hover:underline">Читать далее</a>
         </div>
     @empty
-        <p>Постов пока нет.</p>
+        <p>Нет постов.</p>
     @endforelse
+
+    {{ $posts->links() }}
+
 @endsection
