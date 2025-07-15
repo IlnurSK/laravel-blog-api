@@ -42,7 +42,7 @@
     </form>
 
     @forelse($posts as $post)
-        <div class="border rounded-lg p-4 shadow-sm bg-white hover:shadow transition">
+        <div class="border rounded-lg p-4 shadow-sm bg-white hover:shadow transition mb-4">
             <h2 class="text-xl font-semibold mb-2">
                 <a href="{{ route('posts.show', $post->id) }}" class="text-blue-600 hover:underline">
                     {{ $post->title }}
