@@ -19,14 +19,21 @@
         </div>
 
         <div>
-            <label for="tag_ids" class="block text-sm font-medium">Теги</label>
-            <select name="tag_ids[]" id="tag_ids" multiple class="border rounded p-1">
+            <p class="block text-sm font-medium mb-1">Теги</p>
+            <div class="flex flex-wrap gap-2">
                 @foreach($tags as $tag)
-                    <option value="{{ $tag->id }}" {{ in_array($tag->id, (array)$tagIds) ? 'selected' : ''}}>
-                        {{ $tag->name }}
-                    </option>
+                    <label class="inline-flex items-center space-x-2 text-sm">
+                        <input
+                        type="checkbox"
+                        name="tag_ids[]"
+                        value="{{ $tag->id }}"
+                        {{ in_array($tag->id, (array) $tagIds) ? 'checked' : '' }}
+                        class="form-checkbox text-blue-600"
+                        >
+                        <span>{{ $tag->name }}</span>
+                    </label>
                 @endforeach
-            </select>
+            </div>
         </div>
 
         <button type="submit" class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600">
@@ -35,17 +42,27 @@
     </form>
 
     @forelse($posts as $post)
-        <div class="bg-white shadow rounded p-4 mb-4">
-            <h2 class="text-xl font-semibold">
-                <a href="#">{{ $post->title }}</a>
+        <div class="border rounded-lg p-4 shadow-sm bg-white hover:shadow transition">
+            <h2 class="text-xl font-semibold mb-2">
+                <a href="{{ route('posts.show', $post->id) }}" class="text-blue-600 hover:underline">
+                    {{ $post->title }}
+                </a>
             </h2>
-            <p class="text-sm text-gray-600">Автор: {{ $post->user->name }} | Категория: {{ $post->$category->name ?? '-' }}</p>
-            <div class="text-sm text-gray-500 mt-1">
-                Теги:
-                @foreach($post->tags as $tag)
-                    <span class="bg-gray-200 px-2 py-0.5 rounded text-xs">{{ $tag->name }}</span>
-                @endforeach
-            </div>
+
+            <p class="text-sm text-gray-600 mb-2">
+                Автор: {{ $post->user->name }} | Категория: {{ $post->category->name ?? 'Без категории' }}
+            </p>
+
+            <p class="text-gray-800">{{ \Illuminate\Support\Str::limit($post->body, 150) }}</p>
+
+            @if($post->tags->isNotEmpty())
+                <div class="mt-2 flex flex-wrap gap-1">
+                    @foreach($post->tags as $tag)
+                        <span class="bg-gray-200 px-2 py-1 rounded text-sm">{{ $tag->name }}</span>
+                    @endforeach
+                </div>
+            @endif
+
         </div>
     @empty
         <p>Нет постов.</p>

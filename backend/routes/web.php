@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\HomeController;
+use App\Http\Controllers\Web\PostController;
 use Illuminate\Support\Facades\Route;
 
 // Маршрут стартовой страницы
@@ -19,4 +20,7 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.pe
 
 // Маршрут выхода из системы
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Маршрут для отображения поста
+Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
 

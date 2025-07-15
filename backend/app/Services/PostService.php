@@ -75,9 +75,11 @@ class PostService
 
         // Если массив Тегов не пустой, то добавляем в запрос теги
         if (!empty($tagIds)) {
-            $query->whereHas('tags', function ($q) use ($tagIds) {
-                $q->whereIn('tags.id', $tagIds);
-            });
+            foreach ($tagIds as $tagId) {
+                $query->whereHas('tags', function ($q) use ($tagId) {
+                    $q->where('tags.id', $tagId);
+                });
+            }
         }
 
         // Возвращаем запрос с фильтром по свежести и пагинацией на 10

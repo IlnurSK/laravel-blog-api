@@ -12,8 +12,10 @@
 
 @include('partials.messages')
 
-<main class="flex-grow container mx-auto px-4 py-6">
-    @yield('content')
+<main class="py-8">
+    <div class="max-w-screen-md mx-auto px-4">
+        @yield('content')
+    </div>
 </main>
 
 <footer class="bg-white text-center text-sm py-4 shadow-inner">
