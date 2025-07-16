@@ -7,15 +7,36 @@ namespace App\Services;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
+use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Facades\Auth;
 
 class PostService
 {
-    public function create(array $data): Post
+    // Метод отображения всех постов с фильтрацией по Категории и Тегам
+    public function index(?int $categoryId = null, array $tagIds = []): LengthAwarePaginator
+    {
+        // Получаем все Посты со связанными данными
+        $query = Post::with(['user', 'category', 'tags']);
+
+        // Если указаны Категории, фильтруем Посты
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
+        }
+
+        // Если указаны Теги, фильтруем Посты
+        if (!empty($tagIds)) {
+            $query->whereHas('tags', function ($q) use ($tagIds) {
+                $q->whereIn('tags.id', $tagIds);
+            });
+        }
+
+        return $query->orderBy('created_at', 'desc')->paginate(10);
+    }
+
+    public function create(User $user, array $data): Post
     {
         // Создаем пост с авторизованны юзером
-        $post = Auth::user()->posts()->create($data);
+        $post = $user->posts()->create($data);
 
         // Если в запросе есть Теги, привязываем их к Посту
         if (isset($data['tag_ids'])) {
@@ -61,29 +82,4 @@ class PostService
             ->orderBy('created_at', 'desc')
             ->paginate(10);
     }
-
-    // Метод фильтрации постов по Категории и Тегам
-    public function getFilteredPosts($categoryId = null, array $tagIds = []): LengthAwarePaginator
-    {
-        // Создаем запрос к Постам, со связанными пользователями, категориями и тегами
-        $query = Post::with(['user', 'category', 'tags']);
-
-        // Если есть ID категории, то добавляем в запрос категорию
-        if ($categoryId) {
-            $query->where('posts.category_id', $categoryId);
-        }
-
-        // Если массив Тегов не пустой, то добавляем в запрос теги
-        if (!empty($tagIds)) {
-            foreach ($tagIds as $tagId) {
-                $query->whereHas('tags', function ($q) use ($tagId) {
-                    $q->where('tags.id', $tagId);
-                });
-            }
-        }
-
-        // Возвращаем запрос с фильтром по свежести и пагинацией на 10
-        return $query->latest()->paginate(10);
-    }
-
 }

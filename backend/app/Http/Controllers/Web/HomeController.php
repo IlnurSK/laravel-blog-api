@@ -21,9 +21,7 @@ class HomeController extends Controller
         private readonly TagService $tagService,
     ) {
     }
-    /**
-     * @throws ConnectionException
-     */
+
     // Метод отображения главной страницы, с получением данных через сервисы
     public function index(Request $request)
     {
@@ -34,7 +32,7 @@ class HomeController extends Controller
         $tagIds = $request->query('tag_ids', []);
 
         // Получаем Посты из сервиса отфильтрованного по нашей категории и тегам
-        $posts = $this->postService->getFilteredPosts($categoryId, $tagIds);
+        $posts = $this->postService->index($categoryId, $tagIds);
 
         // Получаем список категорий
         $categories = $this->categoryService->index();

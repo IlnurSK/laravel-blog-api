@@ -9,7 +9,6 @@ use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Services\PostService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -26,26 +25,14 @@ class PostController extends Controller
      */
     public function index(Request $request)
     {
-        // Получаем все Посты со связанными данными
-        $query = Post::with(['user', 'category', 'tags']);
+        $categoryId = $request->input('category_id');
+        $tagIds = $request->input('tag_ids', []);
 
-        // Если указаны Категории, фильтруем Посты
-        if ($request->has('category_id')) {
-            $query->where('category_id', $request->input('category_id'));
+        if (is_string($tagIds)) {
+            $tagIds = explode(',', $tagIds);
         }
 
-        // Если указаны Теги, фильтруем Посты
-        if ($request->has('tag_ids')) {
-            $tagIds = $request->input('tag_ids');
-            if (is_string($tagIds)) {
-                $tagIds = explode(',', $tagIds); // поддержка строки "1,2"
-            }
-            $query->whereHas('tags', function ($q) use ($tagIds) {
-                $q->whereIn('tags.id', (array) $tagIds);
-            });
-        }
-
-        $posts = $query->orderBy('created_at', 'desc')->paginate(10);
+        $posts = $this->postService->index($categoryId, $tagIds);
 
         return PostResource::collection($posts);
     }
@@ -66,7 +53,7 @@ class PostController extends Controller
         $this->authorize('create', Post::class);
 
         // Получаем новый Пост с валидированной информацией
-        $post = $this->postService->create($request->validated());
+        $post = $this->postService->create($request->user(), $request->validated());
 
         // Возвращаем новый Пост в виде ресурса
         return new PostResource($post);
