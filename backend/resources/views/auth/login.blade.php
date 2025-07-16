@@ -8,7 +8,7 @@
     @endif
 
     <form action="{{ route('login.perform') }}" method="post" class="space-y-4">
-
+        @csrf
         <div>
             <label class="block text-sm font-medium">Email</label>
             <input type="email" name="email" required class="w-full border px-3 py-2 rounded">

@@ -3,14 +3,10 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
-use App\Models\Tag;
 use App\Services\CategoryService;
 use App\Services\PostService;
 use App\Services\TagService;
-use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 
 class HomeController extends Controller
 {

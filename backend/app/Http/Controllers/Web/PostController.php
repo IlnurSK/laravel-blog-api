@@ -51,7 +51,7 @@ class PostController extends Controller
         // Сохраняем валидированные данные
         $this->postService->create($request->user(), $request->validated());
 
-        // Возвращаем перенаправление на страницу постов с сообщением о успехе
+        // Возвращаем перенаправление на страницу постов с сообщением об успехе
         return redirect()->route('posts.mine')->with('success', 'Пост создан');
     }
 

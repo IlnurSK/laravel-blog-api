@@ -21,8 +21,6 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.pe
 // Маршрут выхода из системы
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Маршрут для отображения поста
-Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
 Route::middleware(['auth'])->group(function () {
     // Маршрут для отображения формы создания нового поста
     Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
@@ -31,3 +29,6 @@ Route::middleware(['auth'])->group(function () {
     // Маршрут для отображения страницы со всеми постами юзера
     Route::get('/my-posts', [PostController::class, 'mine'])->name('posts.mine');
 });
+
+// Маршрут для отображения поста
+Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');

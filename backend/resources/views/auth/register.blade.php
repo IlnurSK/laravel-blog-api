@@ -8,6 +8,7 @@
     @endif
 
     <form action="{{ route('register.perform') }}" method="post" class="space-y-4">
+        @csrf
         <div>
             <label class="block text-sm font-medium">Имя</label>
             <input type="text" name="name" required class="w-full border px-3 py-2 rounded">

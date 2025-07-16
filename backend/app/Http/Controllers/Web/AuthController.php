@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
+use App\Models\User;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -26,52 +29,42 @@ class AuthController extends Controller
      * @throws ConnectionException
      */
     // Метод Регистрации
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        // Отправляем данные регистрации на API
-        $response = Http::post(config('app.url') . '/api/register',
-            $request->only('name', 'email', 'password', 'password_confirmation'));
+        // Создаем нового пользователя
+        $user = User::create([
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
 
-        // В случае успеха добавляем токен в сессию и отправляем на страницу с постами
-        if ($response->successful()) {
-            Session::put('token', $response['token']);
-            return redirect('/posts');
-        }
+        // Авторизуем его в сессию
+        Auth::login($user);
 
-        // В случае ошибки возвращаем на прошлую страницу с сообщением
-        return back()->with('error', 'Registration failed');
+        return redirect()->route('home')->with('success', 'Регистрация прошла успешно!');
     }
 
-    /**
-     * @throws ConnectionException
-     */
     // Метод авторизации (логина)
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        // Отправляем данные авторизации на API
-        $response = Http::post(config('app.url') . '/api/login',
-            $request->only('email', 'password'));
+        // Проверка учетных данных
+        if (Auth::attempt($request->validated())) {
+            $request->session()->regenerate();
 
-        // В случае успеха добавляем токен в сессию и отправляем на страницу с постами
-        if ($response->successful()) {
-            Session::put('token', $response['token']);
-            return redirect('/posts');
+            return redirect()->route('home')->with('success', 'Вы вошли в систему');
         }
 
-        // В случае ошибки возвращаем на прошлую страницу с сообщением
-        return back()->with('error', 'Invalid credentials');
+        return back()->withErrors(['email' => 'Неверные данные'])->withInput();
     }
 
     // Метод выхода из системы (логаут)
-    public function logout()
+    public function logout(Request $request)
     {
-        // Отправляем токен сессии на API логаута
-        Http::withToken(Session::get('token'))->post(config('app.url') . '/api/logout');
+        Auth::logout();
 
-        // Удаляем токен из сессии
-        Session::forget('token');
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
-        // Перенаправляем на страницу логина
-        return redirect('/login');
+        return redirect()->route('home')->with('success', 'Вы вышли из аккаунта.');
     }
 }
