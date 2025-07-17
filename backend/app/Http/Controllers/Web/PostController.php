@@ -55,15 +55,34 @@ class PostController extends Controller
         return redirect()->route('posts.mine')->with('success', 'Пост создан');
     }
 
+    // Метод удаления поста
+    public function destroy(Post $post)
+    {
+        // Проверка прав на удаление (только свой пост)
+        $this->authorize('delete', $post);
+
+        // Удаляем через сервис пост
+        $this->postService->delete($post);
+
+        // Перенаправляем на страницу постов с успехом
+        return redirect()->route('posts.mine')->with('success', 'Пост удалён');
+    }
+
 
     // Метод отображения представления с постами юзера
     public function mine()
     {
         // Получаем все посты авторизованного пользователя, с сортировкой по дате и пагинацией
-        $posts = Auth::user()->posts()->latest()->paginate(5);
+        $posts = Auth::user()->posts()->with(['category', 'tags'])->latest()->paginate(5);
 
         // Возвращаем представление и передаем туда данные
         return view('posts.mine', compact('posts'));
+    }
+
+
+    public function showEdit(Post $post)
+    {
+        return view('posts.edit', compact('post'));
     }
 
 }

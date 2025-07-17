@@ -28,6 +28,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
     // Маршрут для отображения страницы со всеми постами юзера
     Route::get('/my-posts', [PostController::class, 'mine'])->name('posts.mine');
+    // Маршрут для отображения формы редактирования поста
+    Route::get('/posts/edit', [PostController::class, 'showEdit'])->name('posts.edit');
+    //Маршрут для удаления поста
+    Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
+
 });
 
 // Маршрут для отображения поста
