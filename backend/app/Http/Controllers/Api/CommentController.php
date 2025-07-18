@@ -76,7 +76,7 @@ class CommentController extends Controller
  */
     public function update(UpdateCommentRequest $request, Comment $comment)
     {
-        // Проверям является ли юзер владельцем
+        // Проверяем является ли юзер владельцем
         $this->authorize('update', $comment);
 
         $comment = $this->commentService->update($comment, $request->validated());

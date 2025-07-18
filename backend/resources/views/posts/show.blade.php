@@ -31,6 +31,8 @@
 
     @include('comments.index', ['comments' => $post->comments])
 
+
+
     @if(auth()->check())
         <h3 class="text-lg font-semibold mt-6">Оставить комментарий:</h3>
 

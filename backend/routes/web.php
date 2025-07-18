@@ -37,6 +37,12 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
     // Маршрут для создания нового комментария
     Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
+    // Маршрут для отображения формы редактирования комментария
+    Route::get('/posts/{post}/comments/{comment}/edit', [CommentController::class, 'showEdit'])->name('comments.edit');
+    // Маршрут для обновления комментария
+    Route::put('/posts/{post}/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
+    // Маршрут удаления Коммента
+    Route::delete('/posts/{post}/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
 
 
 });
