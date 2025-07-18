@@ -30,4 +30,19 @@
     <hr class="my-6">
 
     @include('comments.index', ['comments' => $post->comments])
+
+    @if(auth()->check())
+        <h3 class="text-lg font-semibold mt-6">Оставить комментарий:</h3>
+
+        @include('comments.form', [
+    'action' => route('comments.store', $post),
+    'method' => 'POST',
+    'submitButton' => 'Отправить',
+    'comment' => null
+])
+    @else
+        <p class="mt-4">
+            <a href="{{ route('login') }}" class="text-blue-500 hover:underline">Войдите</a>, чтобы оставить комментарий.
+        </p>
+    @endif
 @endsection
