@@ -29,7 +29,9 @@ Route::middleware(['auth'])->group(function () {
     // Маршрут для отображения страницы со всеми постами юзера
     Route::get('/my-posts', [PostController::class, 'mine'])->name('posts.mine');
     // Маршрут для отображения формы редактирования поста
-    Route::get('/posts/edit', [PostController::class, 'showEdit'])->name('posts.edit');
+    Route::get('/posts/{post}/edit', [PostController::class, 'showEdit'])->name('posts.edit');
+    // Маршрут обновления поста
+    Route::patch('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
     //Маршрут для удаления поста
     Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
 

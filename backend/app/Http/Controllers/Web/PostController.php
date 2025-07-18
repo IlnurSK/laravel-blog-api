@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
 use App\Services\CategoryService;
 use App\Services\PostService;
@@ -79,10 +80,27 @@ class PostController extends Controller
         return view('posts.mine', compact('posts'));
     }
 
-
+    // Метод отображения представления редактирования поста
     public function showEdit(Post $post)
     {
-        return view('posts.edit', compact('post'));
+        return view('posts.edit', [
+            'post' => $post,
+            'categories' => $this->categoryService->index(),
+            'tags' => $this->tagService->index(),
+        ]);
+    }
+
+    // Метод обновления поста
+    public function update(UpdatePostRequest $request, Post $post)
+    {
+        // Проверям права пользователя на создание Поста
+        $this->authorize('update', $post);
+
+        // Обновляем Пост
+        $this->postService->update($post, $request->validated());
+
+        // Возвращаем обновленный Пост в виде ресурса
+        return redirect()->route('posts.mine')->with('success', 'Пост успешно обновлён!');
     }
 
 }

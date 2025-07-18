@@ -3,8 +3,10 @@
 
         <div class="space-x-4">
             <a href="{{ route('home') }}" class="text-xl font-bold text-blue-600">Laravel Blog API</a>
-            <a href="{{ auth()->check() ? route('posts.create') : route('register') }}"
-            class="text-blue-500 hover:underline">Создать пост</a>
+            <a href="{{ auth()->check() ? route('posts.mine') : route('login') }}"
+               class="text-blue-500 hover:underline">Мои посты</a>
+            <a href="{{ auth()->check() ? route('posts.create') : route('login') }}"
+            class="text-blue-500 hover:underline">Создать новый пост</a>
         </div>
 
         <div class="space-x-4">
