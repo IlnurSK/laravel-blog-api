@@ -1,9 +1,12 @@
 <?php
 
+use App\Http\Controllers\Web\AdminController;
 use App\Http\Controllers\Web\AuthController;
+use App\Http\Controllers\Web\CategoryController;
 use App\Http\Controllers\Web\CommentController;
 use App\Http\Controllers\Web\HomeController;
 use App\Http\Controllers\Web\PostController;
+use App\Http\Controllers\Web\TagController;
 use Illuminate\Support\Facades\Route;
 
 // Маршрут стартовой страницы
@@ -22,6 +25,18 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.pe
 // Маршрут выхода из системы
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// Группа маршрутов для админов
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    // Маршрут отображения админ панели
+    Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+    // Ресурсный маршрут для категорий
+    Route::resource('categories', CategoryController::class)->except(['show']);
+    // Ресурсный маршрут для тегов
+    Route::resource('tags', TagController::class)->except(['show']);
+
+});
+
+// Группа маршрутов для авторизованных пользователей
 Route::middleware(['auth'])->group(function () {
     // Маршрут для отображения формы создания нового поста
     Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
@@ -43,7 +58,6 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/posts/{post}/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
     // Маршрут удаления Коммента
     Route::delete('/posts/{post}/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
-
 
 });
 

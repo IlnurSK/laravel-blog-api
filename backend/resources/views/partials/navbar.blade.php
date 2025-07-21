@@ -10,6 +10,12 @@
         </div>
 
         <div class="space-x-4">
+            @auth
+                @if(auth()->user()->is_admin)
+                    <a href="{{ route('admin.dashboard') }}" class="text-blue-600 hover:underline">Админ-панель</a>
+                @endif
+            @endauth
+
             @guest
                 <a href="{{ route('login') }}" class="text-blue-600 hover:underline">Войти</a>
                 <a href="{{ route('register') }}" class="text-blue-600 hover:underline">Регистрация</a>

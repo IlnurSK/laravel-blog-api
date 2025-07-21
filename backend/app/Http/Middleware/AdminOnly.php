@@ -16,7 +16,7 @@ class AdminOnly
     public function handle(Request $request, Closure $next): Response
     {
         if (!auth()->check() || !auth()->user()->is_admin) {
-            return response()->json(['message' => 'Forbidden'], 403);
+            abort(403, 'Доступ запрещен');
         }
 
         return $next($request);
