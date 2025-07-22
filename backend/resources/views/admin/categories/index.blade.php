@@ -10,7 +10,8 @@
             </div>
         @endif
 
-        <div class="mb-4 text-right">
+        <div class="mb-4 flex justify-between">
+            <a href="{{ route('admin.dashboard') }}" class="text-gray-600 hover:underline">← Назад</a>
             <a href="{{ route('admin.categories.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
                 + Добавить категорию
             </a>
