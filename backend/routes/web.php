@@ -50,6 +50,8 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
     // Маршрут для удаления поста
     Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
+    // Маршрут для публикации поста
+    Route::post('/posts/{post}/publish', [PostController::class, 'publish'])->name('posts.publish');
     // Маршрут для создания нового комментария
     Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
     // Маршрут для отображения формы редактирования комментария

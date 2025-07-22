@@ -27,7 +27,7 @@ class HomeController extends Controller
         // Получаем из запроса массив ID тегов
         $tagIds = $request->query('tag_ids', []);
 
-        // Получаем Посты из сервиса отфильтрованного по нашей категории и тегам
+        // Получаем Посты из сервиса отфильтрованного по нашей категории и тегам и публикации
         $posts = $this->postService->index($categoryId, $tagIds);
 
         // Получаем список категорий

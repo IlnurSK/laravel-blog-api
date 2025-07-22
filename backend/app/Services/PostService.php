@@ -16,7 +16,7 @@ class PostService
     public function index(?int $categoryId = null, array $tagIds = []): LengthAwarePaginator
     {
         // Получаем все Посты со связанными данными
-        $query = Post::with(['user', 'category', 'tags']);
+        $query = Post::with(['user', 'category', 'tags'])->where('posts.is_published', true);
 
         // Если указаны Категории, фильтруем Посты
         if ($categoryId) {

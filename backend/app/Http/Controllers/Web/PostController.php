@@ -93,7 +93,7 @@ class PostController extends Controller
     // Метод обновления поста
     public function update(UpdatePostRequest $request, Post $post)
     {
-        // Проверям права пользователя на создание Поста
+        // Проверям права пользователя на редактирование Поста
         $this->authorize('update', $post);
 
         // Обновляем Пост
@@ -101,6 +101,19 @@ class PostController extends Controller
 
         // Возвращаем обновленный Пост в виде ресурса
         return redirect()->route('posts.mine')->with('success', 'Пост успешно обновлён!');
+    }
+
+    // Метод публикации поста
+    public function publish(Post $post)
+    {
+        // Проверям права пользователя на редактирование Поста
+        $this->authorize('update', $post);
+
+        // Обновляем Пост
+        $this->postService->update($post, ['is_published' => true]);
+
+        // Возвращаем обновленный Пост в виде ресурса
+        return redirect()->route('posts.mine')->with('success', 'Пост успешно опубликован!');
     }
 
 }
