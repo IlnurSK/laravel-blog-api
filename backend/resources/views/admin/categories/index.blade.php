@@ -5,12 +5,6 @@
         <div class="max-w-4xl mx-auto p-4">
             <h1 class="text-2xl font-bold mb-4">Категории</h1>
 
-            @if(session('success'))
-                <div class="bg-green-100 text-green-800 px-4 py-2 rounded mb-4">
-                    {{ session('success') }}
-                </div>
-            @endif
-
             <div class="mb-4 flex justify-between">
                 <a href="{{ route('admin.dashboard') }}" class="text-gray-600 hover:underline">← Назад</a>
                 <a href="{{ route('admin.categories.create') }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
