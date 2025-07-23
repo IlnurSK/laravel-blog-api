@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-3xl mx-auto p-4 shadow rounded">
+<div class="max-w-3xl mx-auto bg-white p-6 rounded shadow-lg">
     <h2 class="text-2xl font-bold mb-4">Редактировать комментарий</h2>
 
     <form method="POST" action="{{ route('comments.update', [$comment->post, $comment]) }}">

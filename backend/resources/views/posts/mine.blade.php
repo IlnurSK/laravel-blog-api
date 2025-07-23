@@ -5,7 +5,7 @@
         <h1 class="text-2xl font-bold mb-4">Мои посты</h1>
 
         @foreach($posts as $post)
-            <div class="bg-white rounded shadow p-4 mb-4">
+            <div class="bg-white rounded shadow-lg p-4 mb-4">
                 <h2 class="text-xl font-semibold">
                     <a href="{{ route('posts.show', $post) }}" class="text-blue-600 hover:underline">
                         {{ $post->title }}
@@ -16,7 +16,10 @@
                 </p>
                 <div class="flex gap-2 mt-2">
                     @foreach($post->tags as $tag)
-                        <span class="text-xs bg-gray-200 rounded px-2 py-1">{{ $tag->name }}</span>
+                        <a href="{{ route('home', ['tag_ids[]' => $tag->id]) }}"
+                           class="text-sm text-blue-600 hover:bg-blue-400 hover:text-white bg-gray-200 px-2 py-1 rounded">
+                            #{{ $tag->name }}
+                        </a>
                     @endforeach
                 </div>
                 <div class="mt-4 flex gap-3">

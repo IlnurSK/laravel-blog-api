@@ -20,7 +20,7 @@
                 <a href="{{ route('login') }}" class="text-blue-600 hover:underline">Войти</a>
                 <a href="{{ route('register') }}" class="text-blue-600 hover:underline">Регистрация</a>
             @else
-                <span class="text-gray-700">Привет, {{ \Illuminate\Support\Facades\Auth::user()->name }}</span>
+                <span class="text-gray-700">{{ \Illuminate\Support\Facades\Auth::user()->name }}</span>
                 <form action="{{ route('logout') }}" method="POST" class="inline">
                     @csrf
                     <button type="submit" class="text-red-600 hover:underline">Выйти</button>

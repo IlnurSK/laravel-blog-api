@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container mx-auto">
+    <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow-lg">
         <h1 class="text-2xl font-bold mb-4">Админ-панель</h1>
 
         <ul class="list-disc ml-5">

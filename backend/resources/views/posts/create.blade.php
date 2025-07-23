@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
+    <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow-lg">
         <h1 class="text-2xl font-bold mb-6">Создать пост</h1>
 
         @if(session('success'))

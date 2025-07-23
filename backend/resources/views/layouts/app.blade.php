@@ -6,7 +6,7 @@
     <title>Laravel Blog API</title>
     @vite('resources/css/app.css')
 </head>
-<body class="bg-gray-100 text-gray-900 min-h-screen flex flex-col">
+<body class="bg-gray-200 text-gray-900 min-h-screen flex flex-col">
 
 @include('partials.navbar')
 
