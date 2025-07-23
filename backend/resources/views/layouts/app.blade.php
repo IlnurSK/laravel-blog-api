@@ -18,7 +18,7 @@
     </div>
 </main>
 
-<footer class="bg-white text-center text-sm py-4 shadow-inner">
+<footer class="bg-gray-200 text-center text-sm py-4">
     © {{ date('Y') }} Laravel Blog API. Все права защищены.
 </footer>
 
