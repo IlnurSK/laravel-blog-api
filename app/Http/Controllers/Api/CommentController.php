@@ -101,7 +101,7 @@ class CommentController extends Controller
     {
         // Проверяем существование коммента
         if ($comment->post_id !== $post->id) {
-            return response()->json(['message' => 'Комментарий не обнаружен под этим постом'], 404);
+            return response()->json(['message' => 'Комментарий не обнаружен'], 404);
         }
 
         // Проверяeм есть ли права на удаление у пользователя

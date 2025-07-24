@@ -6,7 +6,6 @@ use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class CommentFeatureTest extends TestCase
@@ -29,11 +28,10 @@ class CommentFeatureTest extends TestCase
         ]);
 
         // Создаем ответ, от лица юзера пробуем удалить данный коммент
-        $response = $this->actingAs($user)->deleteJson("/api/comments/{$comment->id}");
+        $response = $this->actingAs($user)->deleteJson("/api/posts/{$post->id}/comments/{$comment->id}");
 
-        // Ожидаем ответ со статусом 200 и JSON с подтверждением
-        $response->assertStatus(200)
-            ->assertJson(['message' => 'Comment deleted']);
+        // Ожидаем ответ со статусом 204 (noContent())
+        $response->assertStatus(204);
 
         // Проверям что в БД нет больше этого коммента
         $this->assertDatabaseMissing('comments', ['id' => $comment->id]);
@@ -60,7 +58,7 @@ class CommentFeatureTest extends TestCase
 
         // Создаем ответ, от лица первого юзера пытаемся удалить коммент
         $response = $this->actingAs($user)
-            ->deleteJson("/api/comments/{$comment->id}");
+            ->deleteJson("/api/posts/{$post->id}/comments/{$comment->id}");
 
         // Ожидаем ответ со статусом 403
         $response->assertStatus(403);
@@ -69,14 +67,17 @@ class CommentFeatureTest extends TestCase
         $this->assertDatabaseHas('comments', ['id' => $comment->id]);
     }
 
-    // Тест гость не может удалить комментарий
+    // Тест гость не может удалить чужой комментарий
     public function test_guest_cannot_delete_comment()
     {
-        // Создаем комментарий
-        $comment = Comment::factory()->create();
+        // Создаем пост
+        $post = Post::factory()->create();
+
+        // Создаем комментарий связанный с постом
+        $comment = Comment::factory()->create(['user_id' => $post->user_id]);
 
         // Пытаемся удалить этот комментарий, ожидаем статус 401
-        $this->deleteJson("/api/comments/{$comment->id}")->assertStatus(401);
+        $this->deleteJson("/api/posts/{$post->id}/comments/{$comment->id}")->assertStatus(401);
     }
 
 }
