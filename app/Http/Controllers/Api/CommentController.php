@@ -74,9 +74,14 @@ class CommentController extends Controller
      * @urlParam post_id int required ID поста. Example: 1
      * @urlParam comment_id int ID комментария. Example: 1
  */
-    public function update(UpdateCommentRequest $request, Comment $comment)
+    public function update(UpdateCommentRequest $request, Post $post, Comment $comment)
     {
-        // Проверяем является ли юзер владельцем
+        // Проверяем существование коммента
+        if ($comment->post_id !== $post->id) {
+            return response()->json(['message' => 'Комментарий не обнаружен'], 404);
+        }
+
+        // Проверяем есть ли права у юзера на обновление коммента
         $this->authorize('update', $comment);
 
         $comment = $this->commentService->update($comment, $request->validated());
@@ -92,9 +97,14 @@ class CommentController extends Controller
      * @urlParam post_id int required ID поста. Example: 1
      * @urlParam comment_id int ID комментария. Example: 1
  */
-    public function destroy(Comment $comment)
+    public function destroy(Post $post, Comment $comment)
     {
-        // Проверяeм является ли юзер владельцем
+        // Проверяем существование коммента
+        if ($comment->post_id !== $post->id) {
+            return response()->json(['message' => 'Комментарий не обнаружен под этим постом'], 404);
+        }
+
+        // Проверяeм есть ли права на удаление у пользователя
         $this->authorize('delete', $comment);
 
         // Удаляем Коммент

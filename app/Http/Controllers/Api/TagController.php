@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreTagRequest;
 use App\Http\Requests\UpdateTagRequest;
+use App\Http\Resources\PostResource;
 use App\Http\Resources\TagResource;
 use App\Models\Tag;
 use App\Services\PostService;
@@ -102,7 +103,7 @@ class TagController extends Controller
      */
     public function posts(Tag $tag): AnonymousResourceCollection
     {
-        $tags = $this->postService->getPostsByTag($tag);
-        return TagResource::collection($tags);
+        $posts = $this->postService->getPostsByTag($tag);
+        return PostResource::collection($posts);
     }
 }

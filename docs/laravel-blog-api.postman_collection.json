@@ -171,7 +171,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/api/posts?category_id=1&tag_id=2",
+							"raw": "{{base_url}}/api/posts?category_id=2&tag_id=2",
 							"host": [
 								"{{base_url}}"
 							],
@@ -182,7 +182,7 @@
 							"query": [
 								{
 									"key": "category_id",
-									"value": "1"
+									"value": "2"
 								},
 								{
 									"key": "tag_id",
@@ -210,14 +210,14 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/api/posts/1",
+							"raw": "{{base_url}}/api/posts/4",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
 								"posts",
-								"1"
+								"4"
 							]
 						}
 					},
@@ -246,7 +246,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"title\": \"Первый пост\",\r\n  \"body\": \"Это содержимое первого поста\",\r\n  \"category_id\": 1,\r\n  \"tag_ids\": [1, 2],\r\n  \"is_published\": true\r\n}\r\n",
+							"raw": "{\r\n  \"title\": \"Первый пост\",\r\n  \"body\": \"Это содержимое первого поста\",\r\n  \"category_id\": 2,\r\n  \"tag_ids\": [1, 2],\r\n  \"is_published\": true\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -297,14 +297,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/posts/31",
+							"raw": "{{base_url}}/api/posts/32",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
 								"posts",
-								"31"
+								"32"
 							]
 						}
 					},
@@ -389,7 +389,7 @@
 					"response": []
 				},
 				{
-					"name": "GET /categories/{id}/posts",
+					"name": "GET /api/categories/{id}/posts",
 					"protocolProfileBehavior": {
 						"disabledSystemHeaders": {
 							"accept": true
@@ -405,14 +405,14 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/api/categories/1/posts",
+							"raw": "{{base_url}}/api/categories/2/posts",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
 								"categories",
-								"1",
+								"2",
 								"posts"
 							]
 						}
@@ -442,7 +442,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{ \"name\": \"Наука\" }",
+							"raw": "{ \"name\": \"New\" }",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -463,7 +463,7 @@
 					"response": []
 				},
 				{
-					"name": "PUT /categories/{id}",
+					"name": "PUT /api/categories/{id}",
 					"protocolProfileBehavior": {
 						"disabledSystemHeaders": {
 							"accept": true
@@ -507,7 +507,7 @@
 					"response": []
 				},
 				{
-					"name": "DELETE /categories/{id}",
+					"name": "DELETE /api/categories/{id}",
 					"protocolProfileBehavior": {
 						"disabledSystemHeaders": {
 							"accept": true
@@ -601,14 +601,14 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/api/tags/1/posts",
+							"raw": "{{base_url}}/api/tags/2/posts",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
 								"tags",
-								"1",
+								"2",
 								"posts"
 							]
 						}
@@ -805,14 +805,14 @@
 							}
 						],
 						"url": {
-							"raw": "{{base_url}}/api/posts/32/comments/61",
+							"raw": "{{base_url}}/api/posts/31/comments/61",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
 								"posts",
-								"32",
+								"31",
 								"comments",
 								"61"
 							]
@@ -851,14 +851,14 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/posts/32/comments",
+							"raw": "{{base_url}}/api/posts/31/comments",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
 								"posts",
-								"32",
+								"31",
 								"comments"
 							]
 						}
@@ -888,7 +888,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"body\": \"Обновлённый комментарий\"  \r\n}",
+							"raw": "{\r\n  \"body\": \"Обновлённый комментарий4\"  \r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -896,16 +896,16 @@
 							}
 						},
 						"url": {
-							"raw": "{{base_url}}/api/posts/32/comments/61",
+							"raw": "{{base_url}}/api/posts/31/comments/62",
 							"host": [
 								"{{base_url}}"
 							],
 							"path": [
 								"api",
 								"posts",
-								"32",
+								"31",
 								"comments",
-								"61"
+								"62"
 							]
 						}
 					},
