@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -9,11 +11,14 @@ use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Services\CommentService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
-    // Истанцируем CommentService
+    // Инициализируем сервисы
     public function __construct(private readonly CommentService $commentService)
     {
     }
@@ -22,7 +27,7 @@ class CommentController extends Controller
      * Получить комментарии к посту
      * @urlParam post_id int required ID поста. Example: 1
      */
-    public function index(Post $post)
+    public function index(Post $post): AnonymousResourceCollection
     {
         // Возвращаем все Комменты со связанными данными, в виде постраничного списка
         $comments = $post->comments()->with(['user'])->latest()->paginate(10);
@@ -37,7 +42,7 @@ class CommentController extends Controller
      * @bodyParam body string required Текст комментария. Example: Отличная статья!
      * @urlParam post_id int required ID поста. Example: 1
      */
-    public function store(StoreCommentRequest $request, Post $post)
+    public function store(StoreCommentRequest $request, Post $post): CommentResource
     {
         // Создаем коммент
         $comment = $this->commentService->create(
@@ -46,7 +51,7 @@ class CommentController extends Controller
             Auth::user()
         );
 
-        // Возвращаем новый Коммент в виде ресурса, предзагружая связи
+        // Возвращаем новый Коммент в виде ресурса, загружая связанные данные
         return new CommentResource($comment->load(['user', 'post']));
     }
 
@@ -55,7 +60,7 @@ class CommentController extends Controller
      * @urlParam post_id int required ID поста. Example: 1
      * @urlParam comment_id int ID комментария. Example: 1
      */
-    public function show(Post $post, Comment $comment)
+    public function show(Post $post, Comment $comment): JsonResponse|CommentResource
     {
         // Проверяем существование коммента
         if ($comment->post_id !== $post->id) {
@@ -74,7 +79,7 @@ class CommentController extends Controller
      * @urlParam post_id int required ID поста. Example: 1
      * @urlParam comment_id int ID комментария. Example: 1
  */
-    public function update(UpdateCommentRequest $request, Post $post, Comment $comment)
+    public function update(UpdateCommentRequest $request, Post $post, Comment $comment): CommentResource|JsonResponse
     {
         // Проверяем существование коммента
         if ($comment->post_id !== $post->id) {
@@ -97,14 +102,14 @@ class CommentController extends Controller
      * @urlParam post_id int required ID поста. Example: 1
      * @urlParam comment_id int ID комментария. Example: 1
  */
-    public function destroy(Post $post, Comment $comment)
+    public function destroy(Post $post, Comment $comment): JsonResponse|Response
     {
         // Проверяем существование коммента
         if ($comment->post_id !== $post->id) {
             return response()->json(['message' => 'Комментарий не обнаружен'], 404);
         }
 
-        // Проверяeм есть ли права на удаление у пользователя
+        // Проверяем права на удаление у пользователя
         $this->authorize('delete', $comment);
 
         // Удаляем Коммент

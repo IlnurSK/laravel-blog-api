@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -8,11 +10,13 @@ use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
 use App\Services\PostService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class PostController extends Controller
 {
-    // Инстанцируем PostService
+    // Инициализируем сервисы
     public function __construct(private readonly PostService $postService)
     {
     }
@@ -23,7 +27,7 @@ class PostController extends Controller
      * @queryParam category_id int ID категории. Example: 1
      * @queryParam tag_ids integer[] Массив ID тегов. Example: [1, 2]
      */
-    public function index(Request $request)
+    public function index(Request $request): AnonymousResourceCollection
     {
         $categoryId = $request->input('category_id');
         $tagIds = $request->input('tag_ids', []);
@@ -47,9 +51,9 @@ class PostController extends Controller
      * @bodyParam tag_ids array Массив ID тегов (опционально). Example: [1, 2]
      * @bodyParam is_published bool Опубликовано (по умолчанию false). Example: false
      */
-    public function store(StorePostRequest $request)
+    public function store(StorePostRequest $request): PostResource
     {
-        // Проверям права пользователя на создание Поста
+        // Проверяем права пользователя на создание Поста
         $this->authorize('create', Post::class);
 
         // Получаем новый Пост с валидированной информацией
@@ -63,7 +67,7 @@ class PostController extends Controller
      * Получить пост по ID
      * @urlParam post_id int required ID поста. Example: 1
      */
-    public function show(Post $post)
+    public function show(Post $post): PostResource
     {
         // Возвращаем конкретный Пост со связанными данными
         $post->load(['user', 'category', 'tags', 'comments']);
@@ -81,9 +85,9 @@ class PostController extends Controller
      * @bodyParam is_published boolean Опубликовано (по умолчанию false). Example: false
      * @urlParam post_id int required ID поста. Example: 1
      */
-    public function update(UpdatePostRequest $request, Post $post)
+    public function update(UpdatePostRequest $request, Post $post): PostResource
     {
-        // Проверям права пользователя на создание Поста
+        // Проверяем права пользователя на создание Поста
         $this->authorize('update', $post);
 
         // Обновляем Пост
@@ -99,9 +103,9 @@ class PostController extends Controller
      * @authenticated
      * @urlParam post_id int required ID поста. Example: 1
      */
-    public function destroy(Post $post)
+    public function destroy(Post $post): JsonResponse
     {
-        // Проверям права пользователя на удаление Поста
+        // Проверяем права пользователя на удаление Поста
         $this->authorize('delete', $post);
 
         // Удаляем пост

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
@@ -15,7 +17,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class CategoryController extends Controller
 {
-    // Инстанцируем CategoryService
+    // Инициализируем сервисы
     public function __construct(
         private readonly CategoryService $categoryService,
         private readonly PostService $postService
