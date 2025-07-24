@@ -1,35 +1,48 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
-use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\View\View;
 
 class AuthController extends Controller
 {
-    // Метод вызова представления формы регистрации
-    public function showRegister()
+    /**
+     * Вернуть представление формы регистрации
+     *
+     * @return View
+     */
+    public function showRegister(): View
     {
         return view('auth.register');
     }
 
-    // Метод вызова представления формы логина
+    /**
+     * Вернуть представление формы авторизации
+     *
+     * @return View
+     */
     public function showLogin()
     {
         return view('auth.login');
     }
 
     /**
-     * @throws ConnectionException
+     * Зарегистрировать пользователя
+     *
+     * @param RegisterRequest $request
+     * @return RedirectResponse
      */
-    // Метод Регистрации
-    public function register(RegisterRequest $request)
+    public function register(RegisterRequest $request): RedirectResponse
     {
         // Создаем нового пользователя
         $user = User::create([
@@ -44,8 +57,13 @@ class AuthController extends Controller
         return redirect()->route('home')->with('success', 'Регистрация прошла успешно!');
     }
 
-    // Метод авторизации (логина)
-    public function login(LoginRequest $request)
+    /**
+     * Авторизовать пользователя
+     *
+     * @param LoginRequest $request
+     * @return RedirectResponse
+     */
+    public function login(LoginRequest $request): RedirectResponse
     {
         // Проверка учетных данных
         if (Auth::attempt($request->validated())) {
@@ -57,8 +75,13 @@ class AuthController extends Controller
         return back()->withErrors(['email' => 'Неверные данные'])->withInput();
     }
 
-    // Метод выхода из системы (логаут)
-    public function logout(Request $request)
+    /**
+     * Выйти из сессии пользователя
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function logout(Request $request): RedirectResponse
     {
         Auth::logout();
 

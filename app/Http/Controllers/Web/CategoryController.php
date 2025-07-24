@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
@@ -7,10 +9,12 @@ use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 use App\Models\Category;
 use App\Services\CategoryService;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class CategoryController extends Controller
 {
-    // Инициализируем сервис
+    // Инициализируем сервисы
     public function __construct(
         private readonly CategoryService $categoryService,
     )
@@ -18,68 +22,85 @@ class CategoryController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Вернуть представление со списком категорий
+     *
+     * @return View
      */
-    public function index()
+    public function index(): View
     {
         // Получаем все категории
         $categories = $this->categoryService->index();
 
-        // Возвращаем вид, передав туда данные
         return view('admin.categories.index', compact('categories'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Вернуть представление создания новой категорий
+     *
+     * @return View
      */
-    public function create()
+    public function create(): View
     {
-        // Возвращаем вид создания категорий
         return view('admin.categories.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Сохранить новую категорию
+     *
+     * @param StoreCategoryRequest $request
+     * @return RedirectResponse
      */
-    public function store(StoreCategoryRequest $request)
+    public function store(StoreCategoryRequest $request): RedirectResponse
     {
         // Используя сервис создаем новую категорию
         $this->categoryService->create($request->validated());
 
         // Перенаправляем на страницу категорий с уведомлением
-        return redirect()->route('admin.categories.index')->with('success', 'Категория добавлена');
+        return redirect()->route('admin.categories.index')
+            ->with('success', 'Категория добавлена');
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Вернуть представление редактирования категории
+     *
+     * @param Category $category
+     * @return View
      */
-    public function edit(Category $category)
+    public function edit(Category $category): View
     {
-        // Возвращаем представление редактирования категорий, передавая туда категорию
         return view('admin.categories.edit', compact('category'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Обновить категорию
+     *
+     * @param UpdateCategoryRequest $request
+     * @param Category $category
+     * @return RedirectResponse
      */
-    public function update(UpdateCategoryRequest $request, Category $category)
+    public function update(UpdateCategoryRequest $request, Category $category): RedirectResponse
     {
         // Используя сервис обновляем категорию, передав туда новые данные
         $this->categoryService->update($category, $request->validated());
 
         // Перенаправляем на индексную страницу с уведомлением
-        return redirect()->route('admin.categories.index')->with('success', 'Категория обновлена');
+        return redirect()->route('admin.categories.index')
+            ->with('success', 'Категория обновлена');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Удалить категорию
+     *
+     * @param Category $category
+     * @return RedirectResponse
      */
-    public function destroy(Category $category)
+    public function destroy(Category $category): RedirectResponse
     {
         // Используя сервис удаляем категорию
         $this->categoryService->delete($category);
 
         // Перенаправляем на индексную страницу с уведомлением
-        return redirect()->route('admin.categories.index')->with('success', 'Категория удалена');
+        return redirect()->route('admin.categories.index')
+            ->with('success', 'Категория удалена');
     }
 }

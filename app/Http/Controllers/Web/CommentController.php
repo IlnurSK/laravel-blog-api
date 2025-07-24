@@ -1,26 +1,34 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreCommentRequest;
 use App\Http\Requests\UpdateCommentRequest;
-use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Services\CommentService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class CommentController extends Controller
 {
     // Инициализируем сервисы
     public function __construct(
         private readonly CommentService $commentService,
-    ) {
-    }
+    ) {}
 
-    // Метод сохранения нового комментария
-    public function store(StoreCommentRequest $request, Post $post)
+    /**
+     * Сохранить новый комментарий
+     *
+     * @param StoreCommentRequest $request
+     * @param Post $post
+     * @return RedirectResponse
+     */
+    public function store(StoreCommentRequest $request, Post $post): RedirectResponse
     {
         // Создаем коммент, авторизованным юзером
         $this->commentService->create(
@@ -30,16 +38,31 @@ class CommentController extends Controller
         );
 
         // Возвращаем перенаправление на страницу с постом и с сообщением об успехе
-        return redirect()->route('posts.show', $post)->with('success', 'Новый комментарий добавлен!');
+        return redirect()->route('posts.show', $post)
+            ->with('success', 'Новый комментарий добавлен!');
     }
 
-    // Метод отображения формы редактирования комментария
-    public function showEdit(Post $post, Comment $comment)
+    /**
+     * Вернуть форму редактирования комментария
+     *
+     * @param Post $post
+     * @param Comment $comment
+     * @return View
+     */
+    public function showEdit(Post $post, Comment $comment): View
     {
         return view('comments.edit', compact('post', 'comment'));
     }
 
-    public function update(UpdateCommentRequest $request, Post $post, Comment $comment)
+    /**
+     * Обновить комментарий
+     *
+     * @param UpdateCommentRequest $request
+     * @param Post $post
+     * @param Comment $comment
+     * @return RedirectResponse
+     */
+    public function update(UpdateCommentRequest $request, Post $post, Comment $comment): RedirectResponse
     {
         // Проверяем является ли юзер владельцем
         $this->authorize('update', $comment);
@@ -47,20 +70,27 @@ class CommentController extends Controller
         $this->commentService->update($comment, $request->validated());
 
         // Перенаправляем на страницу с постом и с сообщением об обновлении
-        return redirect()->route('posts.show', $post)->with('success', 'Комментарий обновлён!');
-
+        return redirect()->route('posts.show', $post)
+            ->with('success', 'Комментарий обновлён!');
     }
 
-    public function destroy(Post $post, Comment $comment)
+    /**
+     * Удалить комментарий
+     *
+     * @param Post $post
+     * @param Comment $comment
+     * @return RedirectResponse
+     */
+    public function destroy(Post $post, Comment $comment): RedirectResponse
     {
-        // Проверяeм является ли юзер владельцем коммента
+        // Проверяем является ли юзер владельцем коммента
         $this->authorize('delete', $comment);
 
         // Удаляем Коммент
         $this->commentService->delete($comment);
 
         // Возвращаем сообщение об отсутствии контента
-        return redirect()->route('posts.show', $post)->with('success', 'Комментарий удалён!');
-
+        return redirect()->route('posts.show', $post)
+            ->with('success', 'Комментарий удалён!');
     }
 }
