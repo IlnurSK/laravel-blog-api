@@ -8,47 +8,84 @@ use App\Models\User;
 class TagPolicy
 {
     /**
-     * Determine whether the user can view any models.
+     * Определяет, может ли пользователь просматривать список тегов.
+     *
+     * @param User $user Пользователь
+     * @return bool Разрешено ли действие
      */
-    // Право на просмотр списка тегов - все
     public function viewAny(User $user): bool
     {
         return true;
     }
 
     /**
-     * Determine whether the user can view the model.
+     * Определяет, может ли пользователь просматривать конкретный тег.
+     *
+     * @param User $user Пользователь
+     * @param Tag $tag Тег
+     * @return bool Разрешено ли действие
      */
-    // Право на просмотр конкретного тега - все
     public function view(User $user, Tag $tag): bool
     {
         return true;
     }
 
     /**
-     * Determine whether the user can create models.
+     * Определяет, может ли пользователь создавать тег.
+     *
+     * @param User $user Пользователь
+     * @return bool Разрешено ли действие
      */
-    // Право на создание тега - только админ
     public function create(User $user): bool
     {
         return $user->is_admin;
     }
 
     /**
-     * Determine whether the user can update the model.
+     * Определяет, может ли пользователь обновлять тег.
+     *
+     * @param User $user Пользователь
+     * @param Tag $tag Тег
+     * @return bool Разрешено ли действие
      */
-    // Право на обновление тега - только админ
     public function update(User $user, Tag $tag): bool
     {
         return $user->is_admin;
     }
 
     /**
-     * Determine whether the user can delete the model.
+     * Определяет, может ли пользователь удалить категорию.
+     *
+     * @param User $user Пользователь
+     * @param Tag $tag Тег
+     * @return bool Разрешено ли действие
      */
-    // Право на удаление тега - только админ
     public function delete(User $user, Tag $tag): bool
     {
         return $user->is_admin;
+    }
+
+    /**
+     * Восстановление удалённого тега (не используется).
+     *
+     * @param User $user Пользователь
+     * @param Tag $tag Тег
+     * @return bool Разрешено ли действие
+     */
+    public function restore(User $user, Tag $tag): bool
+    {
+        return false;
+    }
+
+    /**
+     * Полное удаление тега (не используется).
+     *
+     * @param User $user Пользователь
+     * @param Tag $tag Тег
+     * @return bool Разрешено ли действие
+     */
+    public function forceDelete(User $user, Tag $tag): bool
+    {
+        return false;
     }
 }

@@ -8,47 +8,84 @@ use App\Models\User;
 class CategoryPolicy
 {
     /**
-     * Determine whether the user can view any models.
+     * Определяет, может ли пользователь просматривать список категорий.
+     *
+     * @param User $user Пользователь
+     * @return bool Разрешено ли действие
      */
-    // Право на просмотр списка категорий - все
     public function viewAny(User $user): bool
     {
         return true;
     }
 
     /**
-     * Determine whether the user can view the model.
+     * Определяет, может ли пользователь просматривать конкретную категорию.
+     *
+     * @param User $user Пользователь
+     * @param Category $category Категория
+     * @return bool Разрешено ли действие
      */
-    // Право на просмотр конкретной категории - все
     public function view(User $user, Category $category): bool
     {
         return true;
     }
 
     /**
-     * Determine whether the user can create models.
+     * Определяет, может ли пользователь создавать категории.
+     *
+     * @param User $user Пользователь
+     * @return bool Разрешено ли действие
      */
-    // Право на создание категории - только админ
     public function create(User $user): bool
     {
         return $user->is_admin;
     }
 
     /**
-     * Determine whether the user can update the model.
+     * Определяет, может ли пользователь обновлять категорию.
+     *
+     * @param User $user Пользователь
+     * @param Category $category Категория
+     * @return bool Разрешено ли действие
      */
-    // Право на обновление категории - только админ
     public function update(User $user, Category $category): bool
     {
         return $user->is_admin;
     }
 
     /**
-     * Determine whether the user can delete the model.
+     * Определяет, может ли пользователь удалить категорию.
+     *
+     * @param User $user Пользователь
+     * @param Category $category Категория
+     * @return bool Разрешено ли действие
      */
-    // Право на удаление категории - только админ
     public function delete(User $user, Category $category): bool
     {
         return $user->is_admin;
+    }
+
+    /**
+     * Восстановление удалённой категории (не используется).
+     *
+     * @param User $user Пользователь
+     * @param Category $category Категория
+     * @return bool Разрешено ли действие
+     */
+    public function restore(User $user, Category $category): bool
+    {
+        return false;
+    }
+
+    /**
+     * Полное удаление категории (не используется).
+     *
+     * @param User $user Пользователь
+     * @param Category $category Категория
+     * @return bool Разрешено ли действие
+     */
+    public function forceDelete(User $user, Category $category): bool
+    {
+        return false;
     }
 }
