@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class StoreCommentRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Определить, имеет ли пользователь право сделать этот запрос.
      */
     public function authorize(): bool
     {
@@ -15,9 +15,9 @@ class StoreCommentRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Получить правила проверки, применяемые к запросу.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array
      */
     public function rules(): array
     {
