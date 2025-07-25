@@ -5,33 +5,56 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Models\Category;
-use App\Models\Post;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Auth;
 
+/**
+ * Сервис для работы с категориями.
+ */
 class CategoryService
 {
+    /**
+     * Получить список всех категорий.
+     *
+     * @return Collection<Category> Коллекция категорий
+     */
     public function index(): Collection
     {
         return Category::all();
     }
+
+    /**
+     * Создать новую категорию.
+     *
+     * @param array{name: string} $data Данные для создания
+     * @return Category Новая категория
+     *
+     */
     public function create(array $data): Category
     {
-        // Возвращаем экземпляр новой Категории
         return Category::create($data);
     }
 
+    /**
+     * Обновить категорию.
+     *
+     * @param Category $category Категория для обновления
+     * @param array{name: string} $data Новые данные
+     * @return Category Обновленная категория
+     */
     public function update(Category $category, array $data): Category
     {
-        // Обновляем данные в текущей Категории
         $category->update($data);
         return $category;
     }
 
+    /**
+     * Удалить категорию.
+     *
+     * @param Category $category Категория для удаления
+     * @return void
+     */
     public function delete(Category $category): void
     {
-        // Удаляем категорию
         $category->delete();
     }
-
 }
