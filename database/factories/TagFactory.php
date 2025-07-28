@@ -2,17 +2,20 @@
 
 namespace Database\Factories;
 
+use App\Models\Tag;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Tag>
+ * Фабрика тегов.
+ *
+ * @extends Factory<Tag>
  */
 class TagFactory extends Factory
 {
     /**
-     * Define the model's default state.
+     * Определить значения по умолчанию для тега
      *
-     * @return array<string, mixed>
+     * @return array{name: string}
      */
     public function definition(): array
     {

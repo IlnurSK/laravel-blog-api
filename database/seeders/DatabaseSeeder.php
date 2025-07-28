@@ -7,18 +7,26 @@ use App\Models\Comment;
 use App\Models\Post;
 use App\Models\Tag;
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+
+/**
+ * Главный сидер базы данных.
+ *
+ * Создает пользователей, категории, теги, посты и комментарии
+ * с использованием фабрик и связывает теги с постами.
+ */
 
 class DatabaseSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * Запустить наполнение базы тестовыми данными.
+     *
+     * Создает 10 пользователей, 5 категорий, 10 тегов, 30 постов (с тегами) и 60 комментариев.
+     *
+     * @return void
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
         // Создаем Пользователей 10 шт
         User::factory(10)->create();
 
@@ -30,7 +38,7 @@ class DatabaseSeeder extends Seeder
 
         // Создаем посты 30шт, к каждой прикрепляем рандомные Теги
         Post::factory(30)->create()->each(function ($post) {
-            $tagIds = Tag::inRandomOrder()->take(rand(1, 3))->pluck('id');
+            $tagIds = Tag::query()->inRandomOrder()->take(rand(1, 3))->pluck('id');
             $post->tags()->attach($tagIds);
         });
 

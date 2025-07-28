@@ -3,26 +3,35 @@
 namespace Database\Factories;
 
 use App\Models\Category;
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Post>
+ * Фабрика для постов.
+ *
+ * @extends Factory<Post>
  */
 class PostFactory extends Factory
 {
     /**
-     * Define the model's default state.
+     * Определить значения по умолчанию для поста
      *
-     * @return array<string, mixed>
+     * @return array{
+     *     user_id: int|Factory,
+     *     category_id: int|Factory,
+     *     title: string,
+     *     body: string,
+     *     is_published: bool
+     * }
      */
     public function definition(): array
     {
         return [
-            'user_id' => User::inRandomOrder()->first()->id ?? User::factory(),
-            'category_id' => Category::inRandomOrder()->first()->id ?? null,
-            'title' => $this->faker->sentence(),
-            'body' => $this->faker->paragraph(6),
+            'user_id'      => User::query()->inRandomOrder()->value('id') ?? User::factory(),
+            'category_id'  => Category::query()->inRandomOrder()->value('id') ?? Category::factory(),
+            'title'        => $this->faker->sentence(),
+            'body'         => $this->faker->paragraph(6),
             'is_published' => $this->faker->boolean(80),
         ];
     }
