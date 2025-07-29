@@ -30,7 +30,7 @@ class HomeController extends Controller
     public function index(Request $request): View
     {
         // Получаем из запроса ID категории
-        $categoryId = $request->query('category_id');
+        $categoryId = $request->integer('category_id') ?: null;
 
         // Получаем из запроса массив ID тегов
         $tagIds = $request->query('tag_ids', []);
