@@ -9,12 +9,24 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
+/**
+ * Модульные тесты отношений модели постов.
+ *
+ * @covers \App\Models\Post
+ * @covers \App\Models\Tag
+ * @covers \App\Models\Category
+ * @covers \App\Models\User
+ */
 class PostRelationTest extends TestCase
 {
     // Используем автообновление ДБ
     use RefreshDatabase;
 
-    // Тест пост принадлежит пользователю
+    /**
+     * Проверяет, что пост принадлежит пользователю.
+     *
+     * @return void
+     */
     public function test_post_belongs_to_user()
     {
         // Создаем пост, связываем его с новым пользователем через for()
@@ -25,8 +37,12 @@ class PostRelationTest extends TestCase
     }
 
 
-    // Тест пост принадлежит категории
-    public function test_post_belongs_category()
+    /**
+     * Проверяет, что пост принадлежит категории.
+     *
+     * @return void
+     */
+    public function test_post_belongs_to_category()
     {
         // Создаем пост, связываем его с новой категорией
         $post = Post::factory()->for(Category::factory())->create();
@@ -36,7 +52,11 @@ class PostRelationTest extends TestCase
     }
 
 
-    // Тест пост имеет теги
+    /**
+     * Проверяет, что пост имеет теги.
+     *
+     * @return void
+     */
     public function test_post_has_tags()
     {
         // Создаем пост

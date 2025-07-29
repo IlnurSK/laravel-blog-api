@@ -8,12 +8,23 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
+/**
+ * Модульные тесты отношений модели комментариев.
+ *
+ * @covers \App\Models\Comment
+ * @covers \App\Models\Post
+ * @covers \App\Models\User
+ */
 class CommentRelationTest extends TestCase
 {
     // Используем обновление БД
     use RefreshDatabase;
 
-    // Тест Коммент принадлежит пользователю
+    /**
+     * Проверяет, что комментарий принадлежит пользователю.
+     *
+     * @return void
+     */
     public function test_comment_belongs_to_user()
     {
         // Создаем Коммент, связываем его с новым юзером
@@ -24,7 +35,11 @@ class CommentRelationTest extends TestCase
     }
 
 
-    // Тест коммент принадлежит к посту
+    /**
+     * Проверяет, что комментарий принадлежит посту.
+     *
+     * @return void
+     */
     public function test_comment_belongs_to_post()
     {
         // Создаем Коммент, связываем его с новым постом

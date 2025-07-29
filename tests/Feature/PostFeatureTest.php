@@ -7,13 +7,24 @@ use App\Models\Post;
 use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
+/**
+ * Функциональные тесты модели постов.
+ *
+ * @covers \App\Models\Post
+ * @covers \App\Http\Controllers\Api\PostController
+ * @covers \App\Policies\PostPolicy
+ */
 class PostFeatureTest extends TestCase
 {
     use RefreshDatabase;
 
+    /**
+     * Проверяет, что авторизованный пользователь может создать пост.
+     *
+     * @return void
+     */
     public function test_authenticated_user_can_create_post()
     {
         $user = User::factory()->create();
@@ -36,11 +47,21 @@ class PostFeatureTest extends TestCase
         $this->assertDatabaseHas('posts', ['title' => 'Тестовый пост']);
     }
 
+    /**
+     * Проверяет, что неавторизованный пользователь (гость) не может создать пост.
+     *
+     * @return void
+     */
     public function test_guest_cannot_create_post()
     {
         $this->postJson('/api/posts', [])->assertStatus(401);
     }
 
+    /**
+     * Проверяет, что авторизованный пользователь может обновить свой пост.
+     *
+     * @return void
+     */
     public function test_authenticated_user_can_update_post()
     {
         $user = User::factory()->create();
@@ -68,6 +89,11 @@ class PostFeatureTest extends TestCase
         $this->assertDatabaseHas('posts', ['id' => $post->id, 'title' => 'Обновленный заголовок']);
     }
 
+    /**
+     * Проверяет, что пользователь не может обновить чужой пост.
+     *
+     * @return void
+     */
     public function test_user_cannot_update_others_post()
     {
         $author = User::factory()->create();

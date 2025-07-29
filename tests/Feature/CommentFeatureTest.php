@@ -8,11 +8,23 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
+/**
+ * Функциональные тесты модели комментариев.
+ *
+ * @covers \App\Models\Comment
+ * @covers \App\Http\Controllers\Api\CommentController
+ * @covers \App\Policies\CommentPolicy
+ */
+
 class CommentFeatureTest extends TestCase
 {
     use RefreshDatabase;
 
-    // Тест пользователь может удалить собственный коммент
+    /**
+     * Проверяет, что пользователь может удалить собственный комментарий.
+     *
+     * @return void
+     */
     public function test_user_can_delete_own_comment()
     {
         // Создаем пользователя
@@ -33,12 +45,16 @@ class CommentFeatureTest extends TestCase
         // Ожидаем ответ со статусом 204 (noContent())
         $response->assertStatus(204);
 
-        // Проверям что в БД нет больше этого коммента
+        // Проверяем что в БД нет больше этого коммента
         $this->assertDatabaseMissing('comments', ['id' => $comment->id]);
     }
 
 
-    // Тест юзер не может удалить чужой коммент
+    /**
+     * Проверяет, что пользователь не может удалить чужой комментарий
+     *
+     * @return void
+     */
     public function test_user_cannot_delete_foreign_comment()
     {
         // Создаем юзера
@@ -63,11 +79,15 @@ class CommentFeatureTest extends TestCase
         // Ожидаем ответ со статусом 403
         $response->assertStatus(403);
 
-        // Проверям что в БД данный коммент сохранился
+        // Проверяем что в БД данный коммент сохранился
         $this->assertDatabaseHas('comments', ['id' => $comment->id]);
     }
 
-    // Тест гость не может удалить чужой комментарий
+    /**
+     * Проверяет, что гость не может удалить комментарий
+     *
+     * @return void
+     */
     public function test_guest_cannot_delete_comment()
     {
         // Создаем пост
@@ -79,5 +99,4 @@ class CommentFeatureTest extends TestCase
         // Пытаемся удалить этот комментарий, ожидаем статус 401
         $this->deleteJson("/api/posts/{$post->id}/comments/{$comment->id}")->assertStatus(401);
     }
-
 }
