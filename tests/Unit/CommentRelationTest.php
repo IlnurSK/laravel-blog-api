@@ -6,15 +6,17 @@ use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
 /**
  * Модульные тесты отношений модели комментариев.
- *
- * @covers \App\Models\Comment
- * @covers \App\Models\Post
- * @covers \App\Models\User
  */
+
+#[CoversClass(Comment::class)]
+#[CoversClass(Post::class)]
+#[CoversClass(User::class)]
+
 class CommentRelationTest extends TestCase
 {
     // Используем обновление БД

@@ -2,20 +2,24 @@
 
 namespace Tests\Feature;
 
+use App\Http\Controllers\Api\PostController;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\Tag;
 use App\Models\User;
+use App\Policies\PostPolicy;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
 /**
  * Функциональные тесты модели постов.
- *
- * @covers \App\Models\Post
- * @covers \App\Http\Controllers\Api\PostController
- * @covers \App\Policies\PostPolicy
  */
+
+#[CoversClass(Post::class)]
+#[CoversClass(PostController::class)]
+#[CoversClass(PostPolicy::class)]
+
 class PostFeatureTest extends TestCase
 {
     use RefreshDatabase;

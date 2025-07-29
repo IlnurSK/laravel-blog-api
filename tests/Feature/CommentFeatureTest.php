@@ -2,19 +2,22 @@
 
 namespace Tests\Feature;
 
+use App\Http\Controllers\Api\CommentController;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
+use App\Policies\CommentPolicy;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
 /**
  * Функциональные тесты модели комментариев.
- *
- * @covers \App\Models\Comment
- * @covers \App\Http\Controllers\Api\CommentController
- * @covers \App\Policies\CommentPolicy
  */
+
+#[CoversClass(Comment::class)]
+#[CoversClass(CommentController::class)]
+#[CoversClass(CommentPolicy::class)]
 
 class CommentFeatureTest extends TestCase
 {

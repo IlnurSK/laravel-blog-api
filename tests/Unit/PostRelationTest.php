@@ -7,16 +7,17 @@ use App\Models\Post;
 use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
 /**
  * Модульные тесты отношений модели постов.
- *
- * @covers \App\Models\Post
- * @covers \App\Models\Tag
- * @covers \App\Models\Category
- * @covers \App\Models\User
  */
+#[CoversClass(Post::class)]
+#[CoversClass(Tag::class)]
+#[CoversClass(Category::class)]
+#[CoversClass(User::class)]
+
 class PostRelationTest extends TestCase
 {
     // Используем автообновление ДБ
