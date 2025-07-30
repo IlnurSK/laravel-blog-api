@@ -66,15 +66,22 @@
 git clone https://github.com/IlnurSK/laravel-blog-api.git
 cd laravel-blog-api
 
-# Устанавливаем зависимости через Sail
-./vendor/bin/sail up -d
-./vendor/bin/sail composer install
+# Устанавливаем зависимости через официальный образ Laravel (composer + PHP)
+docker run --rm \
+  -u "$(id -u):$(id -g)" \
+  -v $(pwd):/var/www/html \
+  -w /var/www/html \
+  laravelsail/php83-composer:latest \
+  composer install
 
-# Копируем и настраиваем переменные окружения
+# Копируем файл окружения и генерируем ключ приложения
 cp .env.example .env
-./vendor/bin/sail artisan key:generate
 
-# Применяем миграции и сидеры
+# Поднимаем контейнеры
+./vendor/bin/sail up -d
+
+# Генерируем ключ приложения и запускаем миграции с сидерами внутри контейнера
+./vendor/bin/sail artisan key:generate
 ./vendor/bin/sail artisan migrate --seed
 
 # Перейдите в браузере на `http://localhost`
