@@ -85,9 +85,8 @@ class PostController extends Controller
         // Удаляем через сервис пост
         $this->postService->delete($post);
 
-        // Перенаправляем на страницу постов с успехом
-        return redirect()->route('posts.mine')
-            ->with('success', 'Пост удалён');
+        // Перенаправляем на предыдущую страницу с успехом
+        return back()->with('success', 'Пост удалён')->setTargetUrl(url('/'));
     }
 
 

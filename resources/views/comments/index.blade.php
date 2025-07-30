@@ -12,15 +12,15 @@
             </div>
 
             @can('update', $comment)
-                <a href="{{ route('comments.edit', [$comment->post, $comment]) }}" class="text-blue-500 hover:underline mr-2">Редактировать</a>
+                <a href="{{ route('comments.edit', [$comment->post, $comment]) }}" class="text-blue-500 hover:underline mr-2 mb-2">Редактировать</a>
             @endcan
 
             @can('delete', $comment)
                 <form action="{{ route('comments.destroy', [$comment->post, $comment]) }}" method="POST" class="inline">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="text-red-500 hover:underline"
-                            onclick="return confirm('Удалить комментарий?')">Удалить</button>
+                    <button type="submit" class="text-red-500 hover:underline mb-2"
+                            onclick="return confirm('Удалить комментарий?')">Удалить комментарий</button>
                 </form>
             @endcan
         @endforeach

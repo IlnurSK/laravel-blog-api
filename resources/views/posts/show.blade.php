@@ -31,11 +31,17 @@
             </div>
         @endif
 
+        @can('delete', $post)
+            <form action="{{ route('posts.destroy',$post) }}" method="POST" onsubmit="return confirm('Удалить пост?')">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="text-red-500 hover:underline mt-2">Удалить пост</button>
+            </form>
+        @endcan
+
         <hr class="my-6">
 
         @include('comments.index', ['comments' => $post->comments])
-
-
 
         @if(auth()->check())
             <h3 class="text-lg font-semibold mt-6">Оставить комментарий:</h3>
