@@ -88,6 +88,18 @@ cp .env.example .env
 ./vendor/bin/sail artisan key:generate
 ./vendor/bin/sail artisan migrate --seed
 
+# Vite и TailwindCSS (Frontend Blade)
+Для корректной работы Blade-интерфейса со стилями, необходимо запустить Vite:
+
+# Подключитесь к контейнеру Laravel
+./vendor/bin/sail shell
+
+# Установите npm-зависимости (если не установлены)
+npm install
+
+# Запустите Vite в режиме разработки
+npm run dev
+
 # Перейдите в браузере на `http://localhost`
 ```
 
@@ -103,9 +115,8 @@ cd laravel-blog-api
 # Устанавливаем зависимости
 composer install
 
-# Копируем файл окружения и генерируем ключ приложения
+# Копируем файл окружения
 cp .env.example .env
-php artisan key:generate
 
 # Поднимаем контейнеры Laravel Sail
 ./vendor/bin/sail up -d
@@ -114,14 +125,9 @@ php artisan key:generate
 ./vendor/bin/sail artisan key:generate
 ./vendor/bin/sail artisan migrate --seed
 
-# Перейдите в браузере на `http://localhost`
-```
-
-## Vite и TailwindCSS (Frontend Blade)
-
+# Vite и TailwindCSS (Frontend Blade)
 Для корректной работы Blade-интерфейса со стилями, необходимо запустить Vite:
 
-```bash
 # Подключитесь к контейнеру Laravel
 ./vendor/bin/sail shell
 
@@ -130,9 +136,11 @@ npm install
 
 # Запустите Vite в режиме разработки
 npm run dev
-````
-Теперь стили Blade-интерфейса будут отображаться корректно. Обновления применяются автоматически (hot reload).
 
+> ⚠️ Не закрывайте этот терминал, пока работает Vite. При остановке Vite стили перестанут отображаться.
+
+# Перейдите в браузере на `http://localhost`
+```
 ---
 
 ## Запуск тестов
@@ -178,8 +186,11 @@ npm run dev
 ---
 
 ## Документация API
-- Полная документация доступна по адресу: [`http://localhost/docs`](http://localhost/docs)
-- Сгенерирована автоматически с помощью пакета Scribe
+- Для генерации API документации с помощью SCRIBE, запустите команду
+```bash
+./vendor/bin/sail artisan scribe:generate
+```
+- Теперь полная документация доступна по адресу: [`http://localhost/docs`](http://localhost/docs)
 - Включает описание всех эндпоинтов, параметров, прав доступа и примеры запросов/ответов
 ![scribe.png](docs/images/scribe.png)
 
