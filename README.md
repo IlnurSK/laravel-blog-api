@@ -61,12 +61,16 @@
 
 ## Установка
 
+### Вариант 1: Установка через Docker (рекомендуется)
+
+> Не требуется локальный PHP или Composer — только установленный Docker.
+
 ```bash
 # Клонируем репозиторий
 git clone https://github.com/IlnurSK/laravel-blog-api.git
 cd laravel-blog-api
 
-# Устанавливаем зависимости через официальный образ Laravel (composer + PHP)
+# Устанавливаем зависимости через официальный образ Laravel Sail
 docker run --rm \
   -u "$(id -u):$(id -g)" \
   -v $(pwd):/var/www/html \
@@ -80,12 +84,39 @@ cp .env.example .env
 # Поднимаем контейнеры
 ./vendor/bin/sail up -d
 
-# Генерируем ключ приложения и запускаем миграции с сидерами внутри контейнера
+# Генерируем ключ и запускаем миграции с сидерами
 ./vendor/bin/sail artisan key:generate
 ./vendor/bin/sail artisan migrate --seed
 
 # Перейдите в браузере на `http://localhost`
 ```
+
+### Вариант 2: Установка через локальный PHP и Composer
+
+> Если у вас установлен PHP 8.3+ и Composer, вы можете выполнить установку вручную.
+
+```bash
+# Клонируем репозиторий
+git clone https://github.com/IlnurSK/laravel-blog-api.git
+cd laravel-blog-api
+
+# Устанавливаем зависимости
+composer install
+
+# Копируем файл окружения и генерируем ключ приложения
+cp .env.example .env
+php artisan key:generate
+
+# Поднимаем контейнеры Laravel Sail
+./vendor/bin/sail up -d
+
+# Генерируем ключ и запускаем миграции с сидерами
+./vendor/bin/sail artisan key:generate
+./vendor/bin/sail artisan migrate --seed
+
+# Перейдите в браузере на `http://localhost`
+```
+
 ## Vite и TailwindCSS (Frontend Blade)
 
 Для корректной работы Blade-интерфейса со стилями, необходимо запустить Vite:
