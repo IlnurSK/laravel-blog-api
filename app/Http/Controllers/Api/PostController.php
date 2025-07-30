@@ -29,7 +29,7 @@ class PostController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
-        $categoryId = $request->input('category_id');
+        $categoryId = $request->integer('category_id') ?: null;
         $tagIds = $request->input('tag_ids', []);
 
         if (is_string($tagIds)) {

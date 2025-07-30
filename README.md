@@ -1,61 +1,158 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel Blog API
+![PHP](https://img.shields.io/badge/php-8.3-blue)
+![Laravel](https://img.shields.io/badge/laravel-12-orange)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Tests](https://img.shields.io/badge/tests-100%25-brightgreen)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Проект представляет собой REST API для блога, написанный на Laravel с использованием Laravel Sanctum, PostgreSQL, Docker и модульной архитектуры. API позволяет создавать, редактировать и просматривать посты, комментарии, категории и теги с разграничением прав доступа. Приложение включает также Blade-интерфейс с адаптивной версткой и минималистичным UI.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Функциональность
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Регистрация и авторизация пользователей (Laravel Sanctum)
+- Создание, редактирование и удаление постов
+- Комментарии к постам
+- Категории и теги для постов
+- Разграничение прав доступа (гость, пользователь, администратор)
+- Пагинация и фильтрация постов (по категориям и тегам)
+- Blade-интерфейс: главная страница, просмотр постов, форма авторизации/регистрации
+- Полноценное API покрытие
+- Документация API через [Scribe](https://scribe.knuckles.wtf)
+- Юнит и функциональные тесты
+- Docker-окружение (Laravel Sail)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+---
 
-## Learning Laravel
+## Быстрый старт
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+1. Установите зависимости и поднимите проект (см. раздел "Установка")
+2. Перейдите в браузере на [`http://localhost`](http://localhost)
+3. Авторизуйтесь как `admin@example.com` / `12345`
+4. Используйте интерфейс или перейдите в `/docs` для тестирования API
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Скриншоты интерфейса
 
-## Laravel Sponsors
+- Главная страница (список постов, фильтрация по категориям и тегам)
+![home.png](docs/images/home.png)
+- Просмотр поста с комментариями
+![post-view.png](docs/images/post-view.png)
+- Форма входа и регистрации
+![register-login.png](docs/images/register-login.png)
+- Создание/редактирование поста (если авторизован)
+![post-edit.png](docs/images/post-edit.png)
+- Админ-панель для редактирования категорий или тегов
+![admin-panel.png](docs/images/admin-panel.png)
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Стек технологий
 
-### Premium Partners
+- PHP 8.3+
+- Laravel 12
+- PostgreSQL
+- Laravel Sanctum
+- Laravel Sail (Docker)
+- Blade + TailwindCSS
+- PHPUnit
+- Scribe (документация API)
+- Eloquent ORM, Policies, Factories, Seeders
+---
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## Установка
 
-## Contributing
+```bash
+# Клонируем репозиторий
+git clone https://github.com/IlnurSK/laravel-blog-api.git
+cd laravel-blog-api
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# Устанавливаем зависимости через Sail
+./vendor/bin/sail up -d
+./vendor/bin/sail composer install
 
-## Code of Conduct
+# Копируем и настраиваем переменные окружения
+cp .env.example .env
+./vendor/bin/sail artisan key:generate
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# Применяем миграции и сидеры
+./vendor/bin/sail artisan migrate --seed
 
-## Security Vulnerabilities
+# Перейдите в браузере на `http://localhost`
+```
+## Vite и TailwindCSS (Frontend Blade)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Для корректной работы Blade-интерфейса со стилями, необходимо запустить Vite:
 
-## License
+```bash
+# Подключитесь к контейнеру Laravel
+./vendor/bin/sail shell
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Установите npm-зависимости (если не установлены)
+npm install
+
+# Запустите Vite в режиме разработки
+npm run dev
+````
+Теперь стили Blade-интерфейса будут отображаться корректно. Обновления применяются автоматически (hot reload).
+
+---
+
+## Запуск тестов
+
+```bash
+./vendor/bin/sail test
+```
+
+---
+
+## Роли и права доступа
+
+| Роль         | Возможности                                                       |
+| ------------ |-------------------------------------------------------------------|
+| Гость        | Просмотр постов и комментариев                                    |
+| Пользователь | Создание, редактирование и удаление **своих** постов/комментариев |
+| Админ        | Полный доступ ко всем сущностям, включая категории и теги         |
+
+
+---
+
+## Демо-доступ администратора
+
+Для демонстрации прав администратора вы можете использовать готового пользователя:
+
+- **Email:** `admin@example.com`
+- **Пароль:** `12345`
+
+Этот пользователь имеет полный доступ ко всем сущностям через веб-интерфейс и API.
+
+
+## Структура API (кратко)
+
+| Метод  | Endpoint                   | Описание                   |
+| ------ | -------------------------- | -------------------------- |
+| GET    | `/api/posts`               | Получить список постов     |
+| POST   | `/api/posts`               | Создать пост               |
+| PUT    | `/api/posts/{id}`          | Обновить пост              |
+| DELETE | `/api/posts/{id}`          | Удалить пост               |
+| GET    | `/api/posts/{id}/comments` | Получить комментарии поста |
+| POST   | `/api/posts/{id}/comments` | Оставить комментарий       |
+
+---
+
+## Документация API
+- Полная документация доступна по адресу: [`http://localhost/docs`](http://localhost/docs)
+- Сгенерирована автоматически с помощью пакета Scribe
+- Включает описание всех эндпоинтов, параметров, прав доступа и примеры запросов/ответов
+![scribe.png](docs/images/scribe.png)
+
+## Дополнительно
+- Сервисно-ориентированная архитектура (PostService, CategoryService и др.)
+- Все контроллеры и модели покрыты аннотациями @covers, @phpdoc для автогенерации и IDE-подсказок
+- Структура соответствует PSR-12
+- Используются Policies для разграничения доступа
+- Eloquent-связи, фабрики и сидеры настроены для быстрой и корректной генерации данных
+- Фронтенд построен на Blade + TailwindCSS (ChatGPT)
+
+## Автор
+Проект разработан как pet-project для портфолио.
+Если вы рекрутер, разработчик или тимлид — с радостью выслушаю обратную связь, обсудим архитектуру и технические детали.

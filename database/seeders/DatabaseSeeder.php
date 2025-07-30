@@ -21,12 +21,20 @@ class DatabaseSeeder extends Seeder
     /**
      * Запустить наполнение базы тестовыми данными.
      *
-     * Создает 10 пользователей, 5 категорий, 10 тегов, 30 постов (с тегами) и 60 комментариев.
+     * Создает 1 админа, 10 пользователей, 5 категорий, 10 тегов, 30 постов (с тегами) и 60 комментариев.
      *
      * @return void
      */
     public function run(): void
     {
+        // Создаем администратора 1 шт
+        User::factory()->create([
+            'name' => 'Admin',
+            'email' => 'admin@example.com',
+            'password' => bcrypt('12345'),
+            'is_admin' => true,
+        ]);
+
         // Создаем Пользователей 10 шт
         User::factory(10)->create();
 
